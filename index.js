@@ -41,28 +41,39 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = require("@atproto/api");
 const dotenv = __importStar(require("dotenv"));
 const cron_1 = require("cron");
 const process = __importStar(require("process"));
+const wikipedia_1 = __importDefault(require("wikipedia"));
 dotenv.config();
-// Create a Bluesky Agent 
 const agent = new api_1.AtpAgent({
     service: 'https://bsky.social',
 });
-function main() {
-    return __awaiter(this, void 0, void 0, function* () {
-        yield agent.login({ identifier: process.env.BLUESKY_USERNAME, password: process.env.BLUESKY_PASSWORD });
-        yield agent.post({
-            text: "🙂"
-        });
-        console.log("Just posted!");
+const main = () => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield getWikipedia();
+    post(result);
+});
+const getWikipedia = () => __awaiter(void 0, void 0, void 0, function* () {
+    const page = yield wikipedia_1.default.page('Virginia_Halas_McCaskey');
+    const info = yield page.infobox();
+    return !info.hasOwnProperty('deathDate');
+});
+const post = (result) => __awaiter(void 0, void 0, void 0, function* () {
+    yield agent.login({ identifier: process.env.BLUESKY_USERNAME, password: process.env.BLUESKY_PASSWORD });
+    const post = result ? 'yes' : 'no';
+    console.log(`Posting ${post}`);
+    yield agent.post({
+        text: post
     });
-}
+    console.log('Successfully Posted!');
+});
 main();
-// Run this on a cron job
 const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
-const scheduleExpression = '0 */3 * * *'; // Run once every three hours in prod
-const job = new cron_1.CronJob(scheduleExpression, main); // change to scheduleExpressionMinute for testing
+const scheduleExpression = '0 12 * * *'; // Run once every three hours in prod
+const job = new cron_1.CronJob(scheduleExpression, main);
 job.start();
