@@ -1,0 +1,23 @@
+{
+  "name": "is-virginia-mccaskey-still-alive-bs-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/amayaea/is-virginia-mccaskey-still-alive-bs-bot.git",
+  "author": "amayaea <emilio.a.amaya@vanderbilt.edu>",
+  "license": "MIT",
+  "scripts": {
+    "build": "npx tsc"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.13.18",
+    "cron": "^3.2.1",
+    "dotenv": "^16.4.5",
+    "process": "^0.11.10",
+    "wikipedia": "^2.1.2"
+  }
+}
