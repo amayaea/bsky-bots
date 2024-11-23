@@ -35,7 +35,7 @@ const post = async (result: boolean) => {
 main();
 
 const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
-const scheduleExpression = '0 12 * * *'; // Run once every three hours in prod
+const scheduleExpression = '0 12 * * *'; // Run everyday at 12
 
 const job = new CronJob(scheduleExpression, main);
 
