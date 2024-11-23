@@ -72,8 +72,6 @@ const post = (result) => __awaiter(void 0, void 0, void 0, function* () {
     });
     console.log('Successfully Posted!');
 });
-main();
-const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
 const scheduleExpression = '0 12 * * *'; // Run everyday at 12
 const job = new cron_1.CronJob(scheduleExpression, main);
 job.start();
