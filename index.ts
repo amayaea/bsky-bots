@@ -32,8 +32,8 @@ const post = async (result: boolean) => {
     console.log('Successfully Posted!')
 }
 
-const scheduleExpression = '0 12 * * *'; // Run everyday at 12
+const scheduleExpression = '0 10 * * *'; // Run everyday at 12
 
-const job = new CronJob(scheduleExpression, main);
+const job = new CronJob(scheduleExpression, main, null, true, 'America/New_York');
 
 job.start();
