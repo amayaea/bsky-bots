@@ -8,7 +8,11 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "start": "ts-node index.js"
+    "start": "ts-node src/index.js",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:deploy": "yarn build && yarn docker:build && yarn docker:up"
   },
   "devDependencies": {
     "@types/node": "^22.9.3",

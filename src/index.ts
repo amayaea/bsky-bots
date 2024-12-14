@@ -36,4 +36,7 @@ const scheduleExpression = '0 10 * * *'; // Run everyday at 12
 
 const job = new CronJob(scheduleExpression, main, null, true, 'America/New_York');
 
+// Sanity testing
+// main();
+
 job.start();
