@@ -1,7 +1,7 @@
-# is-virginia-mccaskey-still-alive-bs-bot
+# bsky-bots
+BlueSky bots created by https://bsky.app/profile/djmilli.bsky.social
 
-## Follow the Bot
-https://bsky.app/profile/isvmccaskeyalive.bsky.social
+## Follow the Bots
+- Is Virginia Mccaskey Still Alive: https://bsky.app/profile/isvmccaskeyalive.bsky.social
+- More to come... 
 
-## Follow the Creator
-https://bsky.app/profile/djmilli.bsky.social
