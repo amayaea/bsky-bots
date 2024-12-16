@@ -12,7 +12,9 @@
     "docker:build": "docker compose build",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
-    "docker:deploy": "yarn build && yarn docker:build && yarn docker:up"
+    "docker:deploy": "yarn build && yarn docker:build && yarn docker:up",
+    "heroku:up": "heroku ps:scale worker=1",
+    "heroku:down": "heroku ps:scale worker=0"
   },
   "devDependencies": {
     "@types/node": "^22.9.3",
