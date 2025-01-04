@@ -1,6 +1,5 @@
 import { AtpAgent } from '@atproto/api';
 import * as dotenv from 'dotenv';
-import { CronJob } from 'cron';
 import * as process from 'process';
 import wiki from 'wikipedia'
 
@@ -32,11 +31,7 @@ const post = async (result: boolean) => {
     console.log('Successfully Posted!')
 }
 
-const scheduleExpression = '0 10 * * *'; // Run everyday at 12
-
-const job = new CronJob(scheduleExpression, main, null, true, 'America/New_York');
-
-// Sanity testing
-// main();
-
-job.start();
+main().catch(err => {
+    console.error(err);
+    process.exit(1); // Retry Job Task by exiting the process
+});

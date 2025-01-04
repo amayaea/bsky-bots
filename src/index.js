@@ -47,7 +47,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = require("@atproto/api");
 const dotenv = __importStar(require("dotenv"));
-const cron_1 = require("cron");
 const process = __importStar(require("process"));
 const wikipedia_1 = __importDefault(require("wikipedia"));
 dotenv.config();
@@ -72,8 +71,7 @@ const post = (result) => __awaiter(void 0, void 0, void 0, function* () {
     });
     console.log('Successfully Posted!');
 });
-const scheduleExpression = '0 10 * * *'; // Run everyday at 12
-const job = new cron_1.CronJob(scheduleExpression, main, null, true, 'America/New_York');
-// Sanity testing
-// main();
-job.start();
+main().catch(err => {
+    console.error(err);
+    process.exit(1); // Retry Job Task by exiting the process
+});
