@@ -14,7 +14,9 @@
     "docker:down": "docker compose down",
     "docker:deploy": "yarn build && yarn docker:build && yarn docker:up",
     "heroku:up": "heroku ps:scale worker=1",
-    "heroku:down": "heroku ps:scale worker=0"
+    "heroku:down": "heroku ps:scale worker=0",
+    "gcloud:build": "./scripts/gcloud-build.sh",
+    "gcloud:deploy": "./scripts/gcloud-build.sh && ./scripts/gcloud-deploy.sh"
   },
   "devDependencies": {
     "@types/node": "^22.9.3",
