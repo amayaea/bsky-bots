@@ -2,7 +2,7 @@ name: Build and Push to Artifact Registry
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
 
 env:
   PROJECT_ID: bsky-bots-444900
@@ -13,18 +13,18 @@ job:
   build-push-artifact:
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@v4"
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
 
-      - id: "auth"
-          uses: "google-github-actions/auth@v2"
+      - id: 'auth'
+          uses: 'google-github-actions/auth@v2'
           with:
-            credentials_json: "${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}"
+            credentials_json: '${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}'
 
-      - name: "Set up Cloud SDK"
-        uses: "google-github-actions/setup-gcloud@v2"
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
 
-      - name: "Docker auth"
+      - name: 'Docker auth'
         run: |-
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
 
@@ -32,5 +32,5 @@ job:
         run: |-
           docker build --tag ${{ env.GAR_LOCATION }} .
 
-      - name: Push image
+      - name: 'Push image'
         run: docker push ${{ env.GAR_LOCATION }}
