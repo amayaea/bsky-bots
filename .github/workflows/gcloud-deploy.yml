@@ -7,9 +7,9 @@ on:
 env:
   PROJECT_ID: bsky-bots-444900
   REGION: us-central1
-  GAR_LOCATION: ${{ env.REGION_CODE }}-docker.pkg.dev/${{ env.PROJECT_ID }}/bsky-bots/bsky-bots-worker
+  SERVICE: bsky-bots/bsky-bots-worker
 
-job:
+jobs:
   build-push-artifact:
     runs-on: ubuntu-latest
     steps:
@@ -28,10 +28,9 @@ job:
       - name: 'Docker auth'
         run: |-
           gcloud auth configure-docker ${{ env.REGION }}-docker.pkg.dev --quiet
-          
-       name: 'Build and Push Container'
-        run: |-
-          docker build --tag ${{ env.GAR_LOCATION }} .
 
-      - name: 'Push image'
-        run: docker push ${{ env.GAR_LOCATION }}
+      - name: 'Build and Push Container'
+        run: |-
+          DOCKER_TAG="$${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}"
+          docker build --tag "${DOCKER_TAG}" .
+          docker push "${DOCKER_TAG}"

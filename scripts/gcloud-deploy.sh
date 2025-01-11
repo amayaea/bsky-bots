@@ -2,5 +2,5 @@
 
 source .env 
 
-docker push $REGION_CODE-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME
+docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME
 
