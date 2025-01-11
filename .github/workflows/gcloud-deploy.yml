@@ -5,13 +5,14 @@ on:
     branches: ['main']
 
 env:
-  PROJECT_ID: bsky-bots-444900
-  REGION: us-central1
-  SERVICE: bsky-bots/bsky-bots-worker
+  PROJECT_ID: 'bsky-bots-444900'
+  REGION: 'us-central1'
+  SERVICE: 'bsky-bots/bsky-bots-worker'
+  WORKLOAD_IDENTITY_PROVIDER: 'projects/885163438716/locations/global/workloadIdentityPools/github/providers/bsky-bots'
 
 jobs:
   build-push-artifact:
-    runs-on: ubuntu-latest
+    runs-on: 'ubuntu-latest'
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -23,7 +24,7 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          credentials_json: '${{ secrets.GCLOUD_SERVICE_ACCOUNT_KEY }}'
+          workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
 
       - name: 'Docker Auth'
         uses: 'docker/login-action@v3'
