@@ -11,7 +11,8 @@ const agent = new AtpAgent({
  
 const main = async () => {
     const result = await getWikipedia()
-    post(result)
+    const agent = await login()
+    post(agent, result)
 }
 
 const getWikipedia = async () : Promise<boolean> => {
@@ -20,11 +21,16 @@ const getWikipedia = async () : Promise<boolean> => {
     return !info.hasOwnProperty('deathDate')
 }
 
-const post = async (result: boolean) => {
-    await agent.login({ identifier: process.env.BLUESKY_USERNAME!, password: process.env.BLUESKY_PASSWORD!})
+const login = async (): Promise<AtpAgent> => {
+    const username = process.env.ENV === 'dev' ? process.env.TEST_BOT_USERNAME : process.env.BLUESKY_USERNAME
+    const password = process.env.ENV === 'dev' ? process.env.TEST_BOT_PASSWORD : process.env.BLUESKY_PASSWORD
+    await agent.login({ identifier: username!, password: password!})
+    return agent
+}
 
-    const post: string = result ? 'yes' : 'no'
-    console.log(`Posting ${post}`)
+const post = async (agent: AtpAgent, result: boolean) => {
+    const post: string = result ? 'Yes, Virginia McCaskey is still alive.' : 'No, Virginia McCaskey is no longer alive.'
+    console.log(`Posting "${post}"`)
     await agent.post({
         text: post
     });
@@ -33,5 +39,5 @@ const post = async (result: boolean) => {
 
 main().catch(err => {
     console.error(err);
-    process.exit(1); // Retry Job Task by exiting the process
+    process.exit(1);
 });
