@@ -2,40 +2,40 @@ name: Build and Push to Artifact Registry
 
 on:
   push:
-    branches: ['main']
+    branches: ["main"]
 
 env:
-  PROJECT_ID: 'bsky-bots-444900'
-  REGION: 'us-central1'
-  SERVICE: 'bsky-bots/bsky-bots-worker'
-  WORKLOAD_IDENTITY_PROVIDER: 'projects/885163438716/locations/global/workloadIdentityPools/github/providers/bsky-bots'
+  PROJECT_ID: "bsky-bots-444900"
+  REGION: "us-central1"
+  SERVICE: "bsky-bots/bsky-bots-worker"
+  WORKLOAD_IDENTITY_PROVIDER: "projects/885163438716/locations/global/workloadIdentityPools/github/providers/bsky-bots"
 
 jobs:
   build-push-artifact:
-    runs-on: 'ubuntu-latest'
+    runs-on: "ubuntu-latest"
     permissions:
-      contents: 'read'
-      id-token: 'write'
+      contents: "read"
+      id-token: "write"
     steps:
-      - name: 'Checkout'
-        uses: 'actions/checkout@v4'
+      - name: "Checkout"
+        uses: "actions/checkout@v4"
 
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: 'google-github-actions/auth@v2'
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
         with:
-          workload_identity_provider: '${{ env.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: 'githubactions@${{ env.PROJECT_ID }}.iam.gserviceaccount.com'
-          token_format: 'access_token'
+          workload_identity_provider: "${{ env.WORKLOAD_IDENTITY_PROVIDER }}"
+          service_account: "githubactions@${{ env.PROJECT_ID }}.iam.gserviceaccount.com"
+          token_format: "access_token"
 
-      - name: 'Docker Auth'
-        uses: 'docker/login-action@v3'
+      - name: "Docker Auth"
+        uses: "docker/login-action@v3"
         with:
-          username: 'oauth2accesstoken'
-          password: '${{ steps.auth.outputs.access_token }}'
-          registry: '${{ env.REGION }}-docker.pkg.dev'
+          username: "oauth2accesstoken"
+          password: "${{ steps.auth.outputs.access_token }}"
+          registry: "${{ env.REGION }}-docker.pkg.dev"
 
-      - name: 'Build and Push Container'
+      - name: "Build and Push Container"
         run: |-
           DOCKER_TAG='${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}'
           docker build --tag $DOCKER_TAG .
