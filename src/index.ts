@@ -18,7 +18,7 @@ const main = async () => {
 const getWikipedia = async (): Promise<boolean> => {
   const page = await wiki.page("Virginia_Halas_McCaskey");
   const info = await page.infobox();
-  return !info.hasOwnProperty("deathDate");
+  return !Object.prototype.hasOwnProperty.call(info, "deathDate");
 };
 
 const login = async (): Promise<AtpAgent> => {
