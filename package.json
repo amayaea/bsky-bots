@@ -1,7 +1,6 @@
 {
   "name": "bsky-bots",
   "version": "1.0.0",
-  "type": "module",
   "main": "dist/index.js",
   "repository": "https://github.com/amayaea/bsky-bots.git",
   "author": "amayaea <emilio.a.amaya@vanderbilt.edu>",
