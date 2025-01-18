@@ -1,6 +1,10 @@
 #!/bin/sh
 
-source .env 
+source .env
 
-docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY_NAME
-
+for dir in bots/*; do
+  if [ -d "$dir" ]; then
+    FOLDER=$(basename "$dir")
+    docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$FOLDER:dev
+  fi
+done

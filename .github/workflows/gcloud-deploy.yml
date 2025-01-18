@@ -7,7 +7,7 @@ on:
 env:
   PROJECT_ID: "bsky-bots-444900"
   REGION: "us-central1"
-  SERVICE: "bsky-bots/bsky-bots-worker"
+  REPOSITORY: "bsky-bots"
   WORKLOAD_IDENTITY_PROVIDER: "projects/885163438716/locations/global/workloadIdentityPools/github/providers/bsky-bots"
 
 jobs:
@@ -37,6 +37,11 @@ jobs:
 
       - name: "Build and Push Container"
         run: |-
-          DOCKER_TAG='${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.SERVICE }}'
-          docker build --tag $DOCKER_TAG .
-          docker push $DOCKER_TAG
+          for dir in bots/*; do
+            if [ -d "$dir" ]; then
+              FOLDER=$(basename "$dir")
+              DOCKER_TAG='${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/$FOLDER'
+              docker build --tag $DOCKER_TAG .
+              docker push $DOCKER_TAG
+            fi
+          done
