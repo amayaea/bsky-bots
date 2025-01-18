@@ -2,16 +2,13 @@ import { AtpAgent } from "@atproto/api";
 import * as dotenv from "dotenv";
 import * as process from "process";
 import wiki from "wikipedia";
+import { login } from "common";
 
 dotenv.config();
 
-const agent = new AtpAgent({
-  service: "https://bsky.social",
-});
-
 const main = async () => {
   const result = await getWikipedia();
-  const agent = await login();
+  const agent = await login(process.env.BLUESKY_USERNAME!, process.env.BLUESKY_PASSWORD!);
   post(agent, result);
 };
 
@@ -19,19 +16,6 @@ const getWikipedia = async (): Promise<boolean> => {
   const page = await wiki.page("Virginia_Halas_McCaskey");
   const info = await page.infobox();
   return !Object.prototype.hasOwnProperty.call(info, "deathDate");
-};
-
-const login = async (): Promise<AtpAgent> => {
-  const username =
-    process.env.ENV === "dev"
-      ? process.env.TEST_BOT_USERNAME
-      : process.env.BLUESKY_USERNAME;
-  const password =
-    process.env.ENV === "dev"
-      ? process.env.TEST_BOT_PASSWORD
-      : process.env.BLUESKY_PASSWORD;
-  await agent.login({ identifier: username!, password: password! });
-  return agent;
 };
 
 const post = async (agent: AtpAgent, result: boolean) => {

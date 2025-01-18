@@ -1,26 +1,31 @@
 {
   "name": "bsky-bots",
   "version": "1.0.0",
+  "private": true,
   "main": "dist/index.js",
   "repository": "https://github.com/amayaea/bsky-bots.git",
   "author": "amayaea <emilio.a.amaya@vanderbilt.edu>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc --watch",
-    "clean": "rm -rf node_modules/",
-    "start": "ts-node dist/index.js",
+    "build": "yarn workspaces run build",
+    "clean": "rm -rf node_modules/ && yarn workspaces run clean",
+    "start:alive": "yarn workspace is-virginia-mccaskey-alive start",
     "prettier": "prettier --write .",
     "lint": "eslint",
+    "prepare": "husky",
     "docker:build": "docker compose build",
     "docker:up": "docker compose up -d",
     "docker:down": "docker compose down",
     "docker:deploy": "yarn build && yarn docker:build && yarn docker:up",
-    "heroku:up": "heroku ps:scale worker=1",
-    "heroku:down": "heroku ps:scale worker=0",
     "gcloud:build": "./scripts/gcloud-build.sh",
-    "gcloud:deploy": "./scripts/gcloud-build.sh && ./scripts/gcloud-deploy.sh",
-    "prepare": "husky"
+    "gcloud:deploy": "./scripts/gcloud-build.sh && ./scripts/gcloud-deploy.sh"
+  },
+  "dependencies": {
+    "@atproto/api": "^0.13.18",
+    "dotenv": "^16.4.5",
+    "process": "^0.11.10",
+    "ts-node": "^10.9.2",
+    "wikipedia": "^2.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
@@ -34,13 +39,6 @@
     "typescript": "^5.7.2",
     "typescript-eslint": "^8.19.1"
   },
-  "dependencies": {
-    "@atproto/api": "^0.13.18",
-    "dotenv": "^16.4.5",
-    "process": "^0.11.10",
-    "ts-node": "^10.9.2",
-    "wikipedia": "^2.1.2"
-  },
   "lint-staged": {
     "**/*.{ts}": [
       "eslint --fix"
@@ -48,5 +46,9 @@
     "**/*": [
       "prettier --write --ignore-unknown"
     ]
-  }
+  },
+  "workspaces": [
+    "common",
+    "bots/*"
+  ]
 }
