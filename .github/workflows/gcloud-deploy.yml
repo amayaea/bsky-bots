@@ -41,7 +41,7 @@ jobs:
             if [ -d "$dir" ]; then
               FOLDER=$(basename "$dir")
               DOCKER_TAG="${{ env.REGION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/$FOLDER"
-              docker build --tag $DOCKER_TAG .
+              docker build --tag $DOCKER_TAG -f $dir/Dockerfile .
               docker push $DOCKER_TAG
             fi
           done
