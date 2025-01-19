@@ -1,13 +1,13 @@
 {
   "name": "@bsky-bots/common",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "clean": "rm -rf node_modules/ dist/",
-    "start": "ts-node dist/index.js"
+    "clean": "rm -rf node_modules/ dist/"
   },
   "dependencies": {
     "@atproto/api": "^0.13.18",

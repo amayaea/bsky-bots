@@ -6,7 +6,7 @@
   "author": "amayaea <emilio.a.amaya@vanderbilt.edu>",
   "license": "MIT",
   "scripts": {
-    "build": "yarn workspaces run build",
+    "build": "yarn workspaces foreach --all run build",
     "clean": "rm -rf node_modules/ dist/ && yarn workspaces run clean",
     "start:alive": "yarn workspace is-virginia-mccaskey-alive start",
     "prettier": "prettier --write .",
@@ -49,5 +49,6 @@
   "workspaces": [
     "common",
     "bots/*"
-  ]
+  ],
+  "packageManager": "yarn@4.6.0"
 }
