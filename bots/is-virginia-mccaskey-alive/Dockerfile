@@ -10,6 +10,12 @@ RUN yarn install
 
 COPY . .
 
+WORKDIR /app/common
+
+RUN yarn build
+
+WORKDIR /app/${WORKSPACE}
+
 RUN yarn build
 
 WORKDIR ${WORKSPACE}
