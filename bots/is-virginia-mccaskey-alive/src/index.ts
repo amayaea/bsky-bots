@@ -2,7 +2,7 @@ import { AtpAgent } from "@atproto/api";
 import * as dotenv from "dotenv";
 import * as process from "process";
 import wiki from "wikipedia";
-import { login } from "common";
+import { login } from "@bsky-bots/common";
 
 dotenv.config();
 
