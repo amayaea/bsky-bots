@@ -21,7 +21,7 @@ const getWikipedia = async (): Promise<boolean> => {
 const post = async (agent: AtpAgent, result: boolean) => {
   const post: string = result
     ? "Yes, Virginia McCaskey is still alive."
-    : "No, Virginia McCaskey is no longer alive.";
+    : "No, Virginia McCaskey is no longer alive. May she rest in peace.";
   console.log(`Posting "${post}"`);
   await agent.post({
     text: post,
