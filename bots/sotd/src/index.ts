@@ -1,26 +1,26 @@
-import { SpotifyApi } from "@spotify/web-api-ts-sdk";
 import * as dotenv from "dotenv";
 import * as process from "process";
+import { BskyClient } from "@bsky-bots/common";
+import { SpotifyClient } from "./spotifyClient";
+import { FIELDS_FILTER, PLAYLIST_ID, TEST_BOT_HANDLE } from "./constants";
+import { mapTrackToRichText } from "./utils";
 
 dotenv.config();
 
 const main = async () => {
-  const api = getSpotifyApi();
-  const items = await api.search("The Beatles", ["artist"]);
-  console.table(
-    items.artists.items.map((item) => ({
-      name: item.name,
-      followers: item.followers.total,
-      popularity: item.popularity,
-    })),
+  const spotify = new SpotifyClient(
+    process.env.SPOTIFY_CLIENT_ID!,
+    process.env.SPOTIFY_CLIENT_SECRET!,
   );
-};
+  const bsky = new BskyClient(process.env.BLUESKY_USERNAME!, process.env.BLUESKY_PASSWORD!);
+  await bsky.login();
 
-const getSpotifyApi = (): SpotifyApi => {
-  return SpotifyApi.withClientCredentials(
-    process.env.SPOTIFY_CLIENT_ID as string,
-    process.env.SPOTIFY_CLIENT_SECRET as string,
-  );
+  const tracks = await spotify.getTracks(PLAYLIST_ID, FIELDS_FILTER);
+  const track = tracks[0].track;
+  const posts = await bsky.getAllPosts(TEST_BOT_HANDLE, 3);
+  console.log(JSON.stringify(posts, null, 2));
+  const rt = mapTrackToRichText(track);
+  bsky.post(rt);
 };
 
 main().catch((err) => {
