@@ -1,4 +1,4 @@
-import { RichText, AtpAgent } from "@atproto/api";
+import { RichText, AtpAgent, AppBskyEmbedExternal } from "@atproto/api";
 
 export class BskyClient {
   private agent: AtpAgent;
@@ -22,7 +22,7 @@ export class BskyClient {
     await this.agent.login({ identifier: u!, password: p! });
   }
 
-  public async getAllPosts(actor: string, limit: number) {
+  public async getAllPosts(actor: string, limit?: number) {
     const authorFeed = await this.agent.getAuthorFeed({
       actor,
       limit,
@@ -30,11 +30,13 @@ export class BskyClient {
     return authorFeed.data.feed;
   }
 
-  public async post(rt: RichText) {
+  public async post(rt: RichText, embed?: AppBskyEmbedExternal.Main) {
     console.log(`Posting "${rt.text}"`);
+    await rt.detectFacets(this.agent);
     await this.agent.post({
       text: rt.text,
       facets: rt.facets,
+      embed: embed,
     });
     console.log("Successfully Posted!");
   }
