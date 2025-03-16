@@ -1,4 +1,5 @@
 import { RichText, AtpAgent, AppBskyEmbedExternal } from "@atproto/api";
+import { OutputSchema } from "@atproto/api/dist/client/types/com/atproto/repo/uploadBlob";
 
 export class BskyClient {
   private agent: AtpAgent;
@@ -22,11 +23,17 @@ export class BskyClient {
     await this.agent.login({ identifier: u!, password: p! });
   }
 
+  public getUsername(): string {
+    return this.username;
+  }
+
   public async getAllPosts(actor: string, limit?: number) {
+    console.log(`Getting all posts for ${actor}`);
     const authorFeed = await this.agent.getAuthorFeed({
       actor,
       limit,
     });
+    console.log(`Found ${authorFeed.data.feed.length} posts`);
     return authorFeed.data.feed;
   }
 
@@ -39,5 +46,12 @@ export class BskyClient {
       embed: embed,
     });
     console.log("Successfully Posted!");
+  }
+
+  public async uploadBlob(blob: Blob): Promise<OutputSchema> {
+    console.log("Uploading blob");
+    const { data } = await this.agent.uploadBlob(blob, { encoding: "image/jpeg" });
+    console.log("Successfully uploaded blob");
+    return data;
   }
 }

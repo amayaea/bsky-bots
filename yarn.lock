@@ -595,7 +595,6 @@ __metadata:
     ts-node: "npm:^10.9.2"
     typescript: "npm:^5.7.2"
     typescript-eslint: "npm:^8.19.1"
-    wikipedia: "npm:^2.1.2"
   languageName: unknown
   linkType: soft
 

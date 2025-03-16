@@ -11,6 +11,7 @@
     "start": "yarn build && ts-node dist/index.js"
   },
   "dependencies": {
+    "@bsky-bots/common": "workspace:*",
     "@spotify/web-api-ts-sdk": "^1.2.0",
     "dotenv": "^16.4.7",
     "ts-node": "^10.9.2"
