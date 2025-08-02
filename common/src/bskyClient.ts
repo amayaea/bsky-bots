@@ -1,5 +1,6 @@
-import { RichText, AtpAgent, AppBskyEmbedExternal } from "@atproto/api";
+import { RichText, AtpAgent, AppBskyEmbedExternal, AppBskyFeedGetPosts } from "@atproto/api";
 import { OutputSchema } from "@atproto/api/dist/client/types/com/atproto/repo/uploadBlob";
+import { FeedViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
 
 export class BskyClient {
   private agent: AtpAgent;
@@ -10,31 +11,19 @@ export class BskyClient {
     this.agent = new AtpAgent({
       service: "https://bsky.social",
     });
-    this.username = username;
-    this.password = password;
+    this.username = process.env.NODE_ENV === "dev" ? process.env.TEST_BOT_USERNAME! : username!;
+    this.password = process.env.NODE_ENV === "dev" ? process.env.TEST_BOT_PASSWORD! : password!;
   }
 
   public async login(): Promise<void> {
     console.log(
       `Logging in with ${process.env.NODE_ENV === "dev" ? "dev" : "production"} credentials`,
     );
-    const u = process.env.NODE_ENV === "dev" ? process.env.TEST_BOT_USERNAME : this.username;
-    const p = process.env.NODE_ENV === "dev" ? process.env.TEST_BOT_PASSWORD : this.password;
-    await this.agent.login({ identifier: u!, password: p! });
+    await this.agent.login({ identifier: this.username, password: this.password });
   }
 
   public getUsername(): string {
     return this.username;
-  }
-
-  public async getAllPosts(actor: string, limit?: number) {
-    console.log(`Getting all posts for ${actor}`);
-    const authorFeed = await this.agent.getAuthorFeed({
-      actor,
-      limit,
-    });
-    console.log(`Found ${authorFeed.data.feed.length} posts`);
-    return authorFeed.data.feed;
   }
 
   public async post(rt: RichText, embed?: AppBskyEmbedExternal.Main) {
@@ -46,6 +35,35 @@ export class BskyClient {
       embed: embed,
     });
     console.log("Successfully Posted!");
+  }
+
+  public async getPosts(uris: string[]): Promise<AppBskyFeedGetPosts.Response> {
+    return await this.agent.getPosts({ uris });
+  }
+
+  public async getWholeAuthorFeed(actor: string, filter?: string): Promise<FeedViewPost[]> {
+    console.log(`Getting entire author feed for ${actor}`);
+    let allPosts: FeedViewPost[] = [];
+    let cursor: string | undefined = undefined;
+    const batchSize = 100;
+
+    let hasMore = true;
+    while (hasMore) {
+      const response = await this.agent.getAuthorFeed({
+        actor,
+        limit: batchSize,
+        cursor,
+        filter,
+      });
+
+      const posts = response.data.feed;
+      allPosts = [...allPosts, ...posts];
+
+      cursor = response.data.cursor;
+      hasMore = cursor !== undefined && posts.length === batchSize;
+    }
+
+    return allPosts;
   }
 
   public async uploadBlob(blob: Blob): Promise<OutputSchema> {

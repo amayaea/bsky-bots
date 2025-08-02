@@ -1,49 +1,37 @@
-import { PlaylistedTrack, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
+import { Market, MaxInt, PlaylistedTrack, SpotifyApi, Track } from "@spotify/web-api-ts-sdk";
 
 export class SpotifyClient {
   private spotify: SpotifyApi;
+  private limit = 50 as MaxInt<50>;
+  private market = "US" as Market;
 
   constructor(clientId: string, clientSecret: string) {
     this.spotify = SpotifyApi.withClientCredentials(clientId, clientSecret);
   }
 
-  private async getPlaylistedTracks(playlistId: string, filter: string, offset: number) {
-    console.log("Getting playlisted tracks for", playlistId, offset);
-    const response = await this.spotify.playlists.getPlaylistItems(
-      playlistId,
-      "US",
-      filter,
-      50,
-      offset,
-    );
-    return response;
-  }
-
   public async getAllPlaylistedTracks(
     playlistId: string,
-    fields?: string,
+    fieldFilter: string,
   ): Promise<PlaylistedTrack<Track>[]> {
-    const limit = 50; // Spotify's max limit per request
     let offset = 0;
     let allTracks: PlaylistedTrack<Track>[] = [];
 
     while (true) {
       const response = await this.spotify.playlists.getPlaylistItems(
         playlistId,
-        undefined,
-        fields,
-        limit,
+        this.market,
+        fieldFilter,
+        this.limit,
         offset,
       );
+
       allTracks = [...allTracks, ...response.items];
-
-      if (!response.next) {
-        break; // No more items to fetch
-      }
-
-      offset += limit;
+      if (!response.next) break;
+      offset += this.limit;
     }
 
-    return allTracks;
+    return allTracks.sort(
+      (a, b) => new Date(a.added_at).getTime() - new Date(b.added_at).getTime(),
+    );
   }
 }

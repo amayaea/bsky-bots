@@ -3,3 +3,9 @@ export type Metatags = {
   description: string;
   image: string;
 };
+
+export type BskyPost = {
+  $type: "app.bsky.feed.post";
+  text: string;
+  createdAt: string;
+};

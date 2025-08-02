@@ -3,12 +3,14 @@ import { SpotifyClient } from "./spotifyClient";
 import { FIELDS_FILTER, PLAYLIST_ID } from "./constants";
 import { AppBskyEmbedExternal, RichText } from "@atproto/api";
 import { PlaylistedTrack, SimplifiedArtist, Track } from "@spotify/web-api-ts-sdk";
-import { DubClient } from "./dubClient";
+import { MetatagsClient } from "./metatagsClient";
+import { FeedViewPost } from "@atproto/api/dist/client/types/app/bsky/feed/defs";
+import { BskyPost } from "./types";
 
 export class SotdBot {
   private spotify: SpotifyClient;
   private bsky: BskyClient;
-  private dub: DubClient;
+  private metatags: MetatagsClient;
 
   constructor() {
     this.spotify = new SpotifyClient(
@@ -16,25 +18,72 @@ export class SotdBot {
       process.env.SPOTIFY_CLIENT_SECRET!,
     );
     this.bsky = new BskyClient(process.env.BLUESKY_USERNAME!, process.env.BLUESKY_PASSWORD!);
-    this.dub = new DubClient();
+    this.metatags = new MetatagsClient();
   }
 
   public async run(): Promise<void> {
     await this.bsky.login();
 
-    const tracks: PlaylistedTrack<Track>[] = (
-      await this.spotify.getAllPlaylistedTracks(PLAYLIST_ID, FIELDS_FILTER)
-    ).sort((a, b) => new Date(b.added_at).getTime() - new Date(a.added_at).getTime());
+    const tracks: PlaylistedTrack<Track>[] = await this.spotify.getAllPlaylistedTracks(
+      PLAYLIST_ID,
+      FIELDS_FILTER,
+    );
 
-    // const posts: FeedViewPost[] = await this.bsky.getAllPosts(this.bsky.getUsername());
+    const authorFeed: FeedViewPost[] = await this.bsky.getWholeAuthorFeed(
+      this.bsky.getUsername(),
+      "posts_with_media",
+    );
 
-    // const songsToPost = this.findSongsToPost(tracks, posts);
+    await this.findSongsToPost(tracks, authorFeed);
 
     const rt = this.mapTrackToRichText(tracks[0].track);
     this.bsky.post(rt, await this.getTrackEmbed(tracks[0].track));
   }
 
-  // private findSongsToPost = (tracks: PlaylistedTrack<Track>[], posts: FeedViewPost[]): Track[] => {};
+  private async findSongsToPost(
+    playlistedTracks: PlaylistedTrack<Track>[],
+    feedViewPosts: FeedViewPost[],
+  ): Promise<Track[]> {
+    const result: Track[] = [];
+
+    const posts = feedViewPosts
+      .map((feedViewPost) => feedViewPost.post.record as BskyPost)
+      .map((record) => {
+        return {
+          text: record.text,
+          createdAt: new Date(record.createdAt),
+        };
+      });
+
+    const tracks = playlistedTracks.map((track) => {
+      return {
+        name: track.track.name,
+        artist: track.track.artists[0].name,
+        album: track.track.album.name,
+        added: new Date(track.added_at),
+      };
+    });
+
+    console.table(
+      posts.map((post) => {
+        return {
+          text: post.text,
+          createdAt: post.createdAt,
+        };
+      }),
+    );
+
+    console.table(
+      tracks.map((t) => ({
+        name: t.name,
+        artist: t.artist,
+        album: t.album,
+        added: t.added,
+      })),
+    );
+
+    return result;
+  }
 
   private mapTrackToRichText = (track: Track): RichText => {
     const result = new RichText({
@@ -46,7 +95,7 @@ export class SotdBot {
   private getTrackEmbed = async (track: Track): Promise<AppBskyEmbedExternal.Main> => {
     try {
       const uri = track.external_urls.spotify;
-      const metatags = await this.dub.getMetatags(uri);
+      const metatags = await this.metatags.getMetatags(uri);
       const blob = await fetch(metatags.image).then((r) => r.blob());
       const uploadBlobResponse = await this.bsky.uploadBlob(blob);
 
