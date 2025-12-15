@@ -16,7 +16,7 @@
     "dotenv": "^16.4.5",
     "process": "^0.11.10",
     "ts-node": "^10.9.2",
-    "wikipedia": "^2.1.2"
+    "wikipedia": "^2.4.2"
   },
   "devDependencies": {
     "@types/node": "^22.9.3",
