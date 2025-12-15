@@ -3,7 +3,7 @@
 source .env
 
 for dir in bots/*; do
-  if [ -d "$dir" ]; then
+  if [ -d "$dir" ] && [ -f "$dir/Dockerfile" ]; then
     FOLDER=$(basename "$dir")
     docker push $REGION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$FOLDER:dev
   fi
