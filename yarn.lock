@@ -1127,6 +1127,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"is-alive@workspace:bots/is-alive":
+  version: 0.0.0-use.local
+  resolution: "is-alive@workspace:bots/is-alive"
+  dependencies:
+    "@atproto/api": "npm:^0.13.18"
+    "@bsky-bots/common": "npm:1.0.0"
+    "@types/node": "npm:^22.9.3"
+    dotenv: "npm:^16.4.5"
+    process: "npm:^0.11.10"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.2"
+    wikipedia: "npm:^2.4.2"
+  languageName: unknown
+  linkType: soft
+
 "is-extglob@npm:^2.1.1":
   version: 2.1.1
   resolution: "is-extglob@npm:2.1.1"
@@ -1172,21 +1187,6 @@ __metadata:
   checksum: 10c0/eb2f7127af02ee9aa2a0237b730e47ac2de0d4e76a4a905a50a11557f2339df5765eaea4ceb8029f1efa978586abe776908720bfcb1900c20c6ec5145f6f29d8
   languageName: node
   linkType: hard
-
-"is-virginia-mccaskey-alive@workspace:bots/is-virginia-mccaskey-alive":
-  version: 0.0.0-use.local
-  resolution: "is-virginia-mccaskey-alive@workspace:bots/is-virginia-mccaskey-alive"
-  dependencies:
-    "@atproto/api": "npm:^0.13.18"
-    "@bsky-bots/common": "npm:1.0.0"
-    "@types/node": "npm:^22.9.3"
-    dotenv: "npm:^16.4.5"
-    process: "npm:^0.11.10"
-    ts-node: "npm:^10.9.2"
-    typescript: "npm:^5.7.2"
-    wikipedia: "npm:^2.1.2"
-  languageName: unknown
-  linkType: soft
 
 "isexe@npm:^2.0.0":
   version: 2.0.0
@@ -1872,6 +1872,16 @@ __metadata:
     axios: "npm:^1.4.0"
     infobox-parser: "npm:^3.6.2"
   checksum: 10c0/6256951596f3dcf2d01820e65e2d320d32116638c8f5270e6e9493278549ce2afa5cd2c794c876bf4c2fdd5fe4bb870cfaee53fe19528cdf3b3e4edb7a6bb477
+  languageName: node
+  linkType: hard
+
+"wikipedia@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "wikipedia@npm:2.4.2"
+  dependencies:
+    axios: "npm:^1.4.0"
+    infobox-parser: "npm:^3.6.2"
+  checksum: 10c0/242a5b9078d8bbf792fd369e7eba9a77c344b94cf122255cdcdd695764f9a4dda1a25bb0372ed92407d9ba5aa808e26132a79f0da7fdd54635308e270606c339
   languageName: node
   linkType: hard
 

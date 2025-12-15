@@ -1,6 +1,6 @@
 FROM node:22
 
-ARG WORKSPACE=bots/is-virginia-mccaskey-alive
+ARG WORKSPACE=bots/is-alive
 
 WORKDIR /app
 

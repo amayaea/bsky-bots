@@ -8,7 +8,7 @@
   "scripts": {
     "build": "yarn workspaces foreach --all --topological run build",
     "clean": "rm -rf node_modules/ dist/ && yarn workspaces run clean",
-    "start:alive": "yarn workspace is-virginia-mccaskey-alive start",
+    "start:alive": "yarn workspace is-alive start",
     "prettier": "prettier --write .",
     "lint": "eslint",
     "prepare": "husky",

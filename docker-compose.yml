@@ -1,4 +1,4 @@
 services:
-  is-virginia-mccaskey-alive:
+  is-alive:
     build:
-      dockerfile: bots/is-virginia-mccaskey-alive/Dockerfile
+      dockerfile: bots/is-alive/Dockerfile
