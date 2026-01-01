@@ -65,8 +65,7 @@ export class SotdBot {
 
     const currentYear = new Date().getFullYear();
     const startDate = new Date(Date.UTC(currentYear, 0, 1));
-    // For testing: simulate today as January 2nd
-    const today = new Date(Date.UTC(currentYear, 0, 2));
+    const today = new Date();
     const todayUTC = new Date(
       Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
     );
