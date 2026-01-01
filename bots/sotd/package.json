@@ -1,0 +1,23 @@
+{
+  "name": "sotd",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "clean": "rm -rf node_modules/ dist/",
+    "start": "yarn build && ts-node dist/index.js"
+  },
+  "dependencies": {
+    "@bsky-bots/common": "workspace:*",
+    "@spotify/web-api-ts-sdk": "^1.2.0",
+    "dotenv": "^16.4.7",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.10",
+    "typescript": "^5.7.3"
+  }
+}

@@ -2,3 +2,6 @@ services:
   is-alive:
     build:
       dockerfile: bots/is-alive/Dockerfile
+  sotd:
+    build:
+      dockerfile: bots/sotd/Dockerfile

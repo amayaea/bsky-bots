@@ -9,6 +9,7 @@
     "build": "yarn workspaces foreach --all --topological run build",
     "clean": "rm -rf node_modules/ dist/ && yarn workspaces run clean",
     "start:alive": "yarn workspace is-alive start",
+    "start:sotd": "yarn workspace sotd start",
     "prettier": "prettier --write .",
     "lint": "eslint",
     "prepare": "husky",
