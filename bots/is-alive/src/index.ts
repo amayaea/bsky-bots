@@ -1,9 +1,8 @@
-import { AtpAgent } from "@atproto/api";
 import * as dotenv from "dotenv";
 import * as process from "process";
 import wiki from "wikipedia";
 import axios from "axios";
-import { login } from "@bsky-bots/common";
+import { BskyClient } from "@bsky-bots/common";
 
 dotenv.config();
 const userAgent = "bsky-bots/1.0 (https://github.com/amayaea/bsky-bots)";
@@ -15,8 +14,9 @@ const gender = "he";
 
 const main = async () => {
   const result = await getWikipedia();
-  const agent = await login(process.env.BLUESKY_USERNAME!, process.env.BLUESKY_PASSWORD!);
-  post(agent, result);
+  const bsky = new BskyClient(process.env.BLUESKY_USERNAME!, process.env.BLUESKY_PASSWORD!);
+  await bsky.login();
+  await post(bsky, result);
 };
 
 const getWikipedia = async (): Promise<boolean> => {
@@ -30,15 +30,11 @@ const getWikipedia = async (): Promise<boolean> => {
   }
 };
 
-const post = async (agent: AtpAgent, result: boolean) => {
-  const post: string = result
+const post = async (bsky: BskyClient, result: boolean) => {
+  const postText: string = result
     ? `Yes, ${person} is still alive.`
     : `No, ${person} is no longer alive. May ${gender} rest in peace.`;
-  console.log(`Posting "${post}"`);
-  await agent.post({
-    text: post,
-  });
-  console.log("Successfully Posted!");
+  await bsky.postText(postText);
 };
 
 main().catch((err) => {

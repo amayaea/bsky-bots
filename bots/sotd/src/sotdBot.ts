@@ -65,6 +65,11 @@ export class SotdBot {
 
     const currentYear = new Date().getFullYear();
     const startDate = new Date(Date.UTC(currentYear, 0, 1));
+    // For testing: simulate today as January 2nd
+    const today = new Date(Date.UTC(currentYear, 0, 2));
+    const todayUTC = new Date(
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+    );
 
     const songsToPost: SOTD[] = [];
     const alreadyPostedSongs = new Set<string>();
@@ -91,6 +96,14 @@ export class SotdBot {
       const track = playlistedTracks[i];
       const targetDate = new Date(startDate);
       targetDate.setUTCDate(startDate.getUTCDate() + i);
+
+      // Stop if target date is in the future
+      if (targetDate > todayUTC) {
+        console.log(
+          `Reached current date (${this.formatDateUTC(todayUTC)}). Stopping search for future dates.`,
+        );
+        break;
+      }
 
       console.log(
         `Checking song ${i + 1}: ${track.track.name} by ${track.track.artists[0].name} for date: ${this.formatDateUTC(targetDate)}`,

@@ -44,6 +44,13 @@ export class BskyClient {
     console.log("Successfully Posted!");
   }
 
+  public async postText(text: string) {
+    console.log(`Posting "${text}"`);
+    await this.agent.post({
+      text,
+    });
+  }
+
   public async getPosts(uris: string[]): Promise<AppBskyFeedGetPosts.Response> {
     return await this.agent.getPosts({ uris });
   }

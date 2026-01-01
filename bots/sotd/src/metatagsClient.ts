@@ -8,7 +8,6 @@ export class MetatagsClient {
     try {
       const req = await fetch(`${this.METATAGS_API_PATH}=${url}`);
       const response = await req.json();
-      console.log("Fetched metatags for", url, response);
 
       // Check if the API returned an error
       if (response.status !== "success" || !response.data) {
