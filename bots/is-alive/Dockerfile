@@ -16,7 +16,7 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn workspace is-alive build
+RUN yarn build
 
 WORKDIR /app/${WORKSPACE}
 
