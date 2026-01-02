@@ -4,8 +4,8 @@ BlueSky bots created by https://bsky.app/profile/djmilli.bsky.social
 
 ## Follow the Bots
 
-- Is Virginia Mccaskey Still Alive: https://bsky.app/profile/isvmccaskeyalive.bsky.social
-- More to come...
+- Is \_\_\_\_\_ Still Alive: https://bsky.app/profile/isvmccaskeyalive.bsky.social
+- Song of the Day: https://bsky.app/profile/songofthedaybot.bsky.social
 
 ## Setup
 
