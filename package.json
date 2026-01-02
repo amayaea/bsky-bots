@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn workspaces foreach --all --topological run build",
-    "clean": "rm -rf node_modules/ dist/ && yarn workspaces run clean",
+    "clean": "yarn workspaces foreach --all run clean && rm -rf node_modules/ dist/",
     "start:alive": "yarn workspace is-alive start",
     "start:sotd": "yarn workspace sotd start",
     "prettier": "prettier --write .",
@@ -25,7 +25,8 @@
     "dotenv": "^16.4.5",
     "process": "^0.11.10",
     "ts-node": "^10.9.2",
-    "wikipedia": "^2.1.2"
+    "wikipedia": "^2.1.2",
+    "@spotify/web-api-ts-sdk": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
