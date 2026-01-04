@@ -583,10 +583,12 @@ __metadata:
   dependencies:
     "@atproto/api": "npm:^0.13.18"
     "@eslint/js": "npm:^9.18.0"
+    "@spotify/web-api-ts-sdk": "npm:^1.2.0"
     "@types/node": "npm:^22.9.3"
     dotenv: "npm:^16.4.5"
     eslint: "npm:^9.18.0"
     eslint-config-prettier: "npm:^9.1.0"
+    eslint-plugin-unused-imports: "npm:^4.3.0"
     globals: "npm:^15.14.0"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.3.0"
@@ -789,6 +791,19 @@ __metadata:
   bin:
     eslint-config-prettier: bin/cli.js
   checksum: 10c0/6d332694b36bc9ac6fdb18d3ca2f6ac42afa2ad61f0493e89226950a7091e38981b66bac2b47ba39d15b73fff2cd32c78b850a9cf9eed9ca9a96bfb2f3a2f10d
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-unused-imports@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "eslint-plugin-unused-imports@npm:4.3.0"
+  peerDependencies:
+    "@typescript-eslint/eslint-plugin": ^8.0.0-0 || ^7.0.0 || ^6.0.0 || ^5.0.0
+    eslint: ^9.0.0 || ^8.0.0
+  peerDependenciesMeta:
+    "@typescript-eslint/eslint-plugin":
+      optional: true
+  checksum: 10c0/aa4d8ebd8bea5fc0ac8d3fdeb0d0ed2dd0fccb96a1f5569bca772f71b4c45edd1b3c32d9754fb175c45ccf4d123725f333bf99380b9896bb678a8d599e290aa3
   languageName: node
   linkType: hard
 
