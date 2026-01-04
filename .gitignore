@@ -1,6 +1,9 @@
 # Dependency directories
 node_modules/
 
+# Yarn
+.yarn/install-state.gz
+
 # Env files
 .env
 
