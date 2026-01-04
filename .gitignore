@@ -2,8 +2,7 @@
 node_modules/
 
 # Yarn
-.yarn/install-state.gz
-.yarn/releases/
+.yarn/
 
 # Env files
 .env
