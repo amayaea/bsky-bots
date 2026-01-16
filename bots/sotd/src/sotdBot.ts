@@ -1,6 +1,6 @@
 import { BskyClient } from "@bsky-bots/common";
 import { SpotifyClient } from "./spotifyClient";
-import { FIELDS_FILTER, PLAYLIST_ID, HASHTAGS } from "./constants";
+import { FIELDS_FILTER, PLAYLIST_ID, HASHTAGS, SOTD_PREFIX } from "./constants";
 import { AppBskyEmbedExternal, RichText } from "@atproto/api";
 import { PlaylistedTrack, SimplifiedArtist, Track } from "@spotify/web-api-ts-sdk";
 import { MetatagsClient } from "./metatagsClient";
@@ -78,7 +78,9 @@ export class SotdBot {
       const isSOTDPost = this.isSOTDPost(post.text);
 
       if (isSOTDPost) {
-        const songMatch = post.text.match(/Today's Song of the Day is (.+?) by (.+?)\./);
+        const songMatch = post.text.match(
+          new RegExp(`${SOTD_PREFIX.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} (.+?) by (.+?)\\.`),
+        );
         if (songMatch) {
           const songName = songMatch[1].trim();
           const artistName = songMatch[2].trim();
@@ -145,7 +147,7 @@ export class SotdBot {
 
   private mapSOTDToRichText = (sotd: SOTD): RichText => {
     const result = new RichText({
-      text: `${this.formatDateUTC(sotd.date)}: Today's Song of the Day is ${sotd.track.name} by ${this.mapArtistsToText(sotd.track.artists)}. ${sotd.track.external_urls.spotify} ${HASHTAGS.join(" ")}`,
+      text: `${this.formatDateUTC(sotd.date)}: ${SOTD_PREFIX} ${sotd.track.name} by ${this.mapArtistsToText(sotd.track.artists)}. ${sotd.track.external_urls.spotify} ${HASHTAGS.join(" ")}`,
     });
     return result;
   };
@@ -177,10 +179,7 @@ export class SotdBot {
   };
 
   private isSOTDPost = (postText: string): boolean => {
-    return (
-      postText.includes("Today's Song of the Day is") &&
-      HASHTAGS.every((hashtag) => postText.includes(hashtag))
-    );
+    return postText.includes(SOTD_PREFIX);
   };
 
   private formatDateUTC = (date: Date): string => {
