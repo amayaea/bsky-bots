@@ -5,3 +5,6 @@ services:
   sotd:
     build:
       dockerfile: bots/sotd/Dockerfile
+  fantasy-bball:
+    build:
+      dockerfile: bots/fantasy-bball/Dockerfile

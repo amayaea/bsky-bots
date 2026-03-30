@@ -947,6 +947,27 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fantasy-bball@workspace:bots/fantasy-bball":
+  version: 0.0.0-use.local
+  resolution: "fantasy-bball@workspace:bots/fantasy-bball"
+  dependencies:
+    "@bsky-bots/common": "workspace:*"
+    "@types/node": "npm:^22.10.10"
+    dotenv: "npm:^16.4.7"
+    fantasydata-node-client: "npm:^1.8.2"
+    mlb-stats-api: "npm:^2.0.0"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.3"
+  languageName: unknown
+  linkType: soft
+
+"fantasydata-node-client@npm:^1.8.2":
+  version: 1.8.2
+  resolution: "fantasydata-node-client@npm:1.8.2"
+  checksum: 10c0/c2cde9865849a4221a3b8d8bb41afaf7c28c84f2b04fe0f0d2dd387496982716fe7a22694bf6d7f0a2df539f8f3aae96f7811152e955e0dea456a095405d425b
+  languageName: node
+  linkType: hard
+
 "fast-deep-equal@npm:^3.1.1, fast-deep-equal@npm:^3.1.3":
   version: 3.1.3
   resolution: "fast-deep-equal@npm:3.1.3"
@@ -1437,6 +1458,13 @@ __metadata:
   dependencies:
     brace-expansion: "npm:^2.0.1"
   checksum: 10c0/de96cf5e35bdf0eab3e2c853522f98ffbe9a36c37797778d2665231ec1f20a9447a7e567cb640901f89e4daaa95ae5d70c65a9e8aa2bb0019b6facbc3c0575ed
+  languageName: node
+  linkType: hard
+
+"mlb-stats-api@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "mlb-stats-api@npm:2.0.0"
+  checksum: 10c0/81798dc7d53b8e9593dfac01c66bd4b7e99f6db087480574336f2f2df91adaa5a9f0416dcb688ba4dd327391d02310e99ce47692e1856a8a1bbe29862f8b5803
   languageName: node
   linkType: hard
 

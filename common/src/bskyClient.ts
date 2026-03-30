@@ -51,6 +51,34 @@ export class BskyClient {
     });
   }
 
+  /** Create a post and return URIs for threading (replies). */
+  public async postTextWithRef(text: string): Promise<{ uri: string; cid: string }> {
+    console.log(`Posting "${text}"`);
+    const { uri, cid } = await this.agent.post({
+      text,
+    });
+    console.log("Successfully Posted!");
+    return { uri, cid };
+  }
+
+  /** Reply in-thread: `root` is the first post in the thread; `parent` is the post being replied to. */
+  public async postTextReply(
+    text: string,
+    parent: { uri: string; cid: string },
+    root: { uri: string; cid: string },
+  ): Promise<{ uri: string; cid: string }> {
+    console.log(`Posting reply "${text}"`);
+    const { uri, cid } = await this.agent.post({
+      text,
+      reply: {
+        root,
+        parent,
+      },
+    });
+    console.log("Successfully Posted reply!");
+    return { uri, cid };
+  }
+
   public async getPosts(uris: string[]): Promise<AppBskyFeedGetPosts.Response> {
     return await this.agent.getPosts({ uris });
   }

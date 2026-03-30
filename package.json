@@ -10,6 +10,7 @@
     "clean": "yarn workspaces foreach --all run clean && rm -rf node_modules/ dist/",
     "start:alive": "yarn workspace is-alive start",
     "start:sotd": "yarn workspace sotd start",
+    "start:fbb": "yarn workspace fantasy-bball start",
     "prettier": "prettier --write .",
     "lint": "eslint",
     "prepare": "husky",
