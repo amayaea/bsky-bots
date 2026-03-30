@@ -1,0 +1,66 @@
+---
+description: Playbook — scaffold and wire up a new bot under bots/
+alwaysApply: false
+---
+
+# New bot playbook
+
+Use when the user wants a **new bot**. They will describe behavior, data sources, and posting logic — implement that on top of this wiring checklist.
+
+## Clarify with the user
+
+- **Purpose**: What it posts, how often, triggers (scheduled job, one-shot, event-driven).
+- **Accounts / env**: Bluesky handle + app password (or session) and any third-party API keys; never commit secrets — use `dotenv` and document variable names.
+- **Shared code**: Prefer `@bsky-bots/common` (`BskyClient`, future shared helpers). Add exports in [common/src/index.ts](common/src/index.ts) only when multiple bots need the same abstraction.
+
+## Workspace package (`bots/<folder>/`)
+
+`<folder>` is the directory name (e.g. `my-bot`). It becomes the Docker image basename in [scripts/gcloud-build.sh](scripts/gcloud-build.sh) / [scripts/gcloud-deploy.sh](scripts/gcloud-deploy.sh).
+
+1. **Create** `bots/<folder>/package.json` — mirror [bots/sotd/package.json](bots/sotd/package.json) / [bots/is-alive/package.json](bots/is-alive/package.json):
+   - `"name"` must match the folder name logically (Yarn workspace name); use **`"@bsky-bots/common": "workspace:*"`** for the monorepo.
+   - `main` / `types`: `dist/index.js` / `dist/index.d.ts`.
+   - `scripts`: `build` (`tsc`), `watch`, `clean`, `start` — typically `yarn build && ts-node dist/index.js` (or `ts-node dist/index.js` after a manual build).
+   - Add only the dependencies the bot needs (plus `dotenv`, `ts-node`, `@types/node`, `typescript` as appropriate).
+
+2. **Create** `bots/<folder>/tsconfig.json` — same shape as [bots/sotd/tsconfig.json](bots/sotd/tsconfig.json): `extends` root `../../tsconfig.json`, `outDir` `dist`, `rootDir` `src`, `paths.@bsky-bots/common` → `../../common/dist`, `include`: `["src"]`.
+
+3. **Implement** `bots/<folder>/src/` — entry [bots/sotd/src/index.ts](bots/sotd/src/index.ts) style: `dotenv.config()`, async `main`, `main().catch(...)` with `process.exit(1)`. Use `BskyClient` from `@bsky-bots/common` or a dedicated class module under `src/`.
+
+4. **Optional**: `README.md` in the bot folder for env vars and run instructions.
+
+Root [tsconfig.json](tsconfig.json) already includes `bots/*/src`; root [package.json](package.json) workspaces already include `bots/*` — no change needed there except the start script below.
+
+## Root `package.json`
+
+Add a convenience script, matching existing `start:alive` / `start:sotd`:
+
+```json
+"start:<shortname>": "yarn workspace <workspace-name> start"
+```
+
+`<workspace-name>` is the `name` field in the bot’s `package.json`.
+
+## Docker
+
+1. **Add** `bots/<folder>/Dockerfile` — copy from [bots/sotd/Dockerfile](bots/sotd/Dockerfile); set `ARG WORKSPACE=bots/<folder>` (must match path).
+
+2. **Add** a service to [docker-compose.yml](docker-compose.yml):
+
+```yaml
+  <service-name>:
+    build:
+      dockerfile: bots/<folder>/Dockerfile
+```
+
+`<service-name>` is usually the same as `<folder>`.
+
+`gcloud-build.sh` / `gcloud-deploy.sh` already loop `bots/*` when a `Dockerfile` exists — **no script edits** needed for build/push discovery.
+
+## Verify
+
+From repo root: `yarn install` (if needed), `yarn build`, `yarn workspace <workspace-name> start` (with `.env` loaded). Optionally `yarn docker:build` / compose to validate the image.
+
+## README / visibility
+
+If the bot is public, consider adding a profile link to the root [README.md](README.md) “Follow the Bots” section (user’s choice).
