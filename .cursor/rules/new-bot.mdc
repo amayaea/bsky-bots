@@ -25,7 +25,7 @@ Use when the user wants a **new bot**. They will describe behavior, data sources
 
 2. **Create** `bots/<folder>/tsconfig.json` — same shape as [bots/sotd/tsconfig.json](bots/sotd/tsconfig.json): `extends` root `../../tsconfig.json`, `outDir` `dist`, `rootDir` `src`, `paths.@bsky-bots/common` → `../../common/dist`, `include`: `["src"]`.
 
-3. **Implement** `bots/<folder>/src/` — entry [bots/sotd/src/index.ts](bots/sotd/src/index.ts) style: `dotenv.config()`, async `main`, `main().catch(...)` with `process.exit(1)`. Use `BskyClient` from `@bsky-bots/common` or a dedicated class module under `src/`.
+3. **Implement** `bots/<folder>/src/` — entry [bots/sotd/src/index.ts](bots/sotd/src/index.ts) style: load **`bots/<folder>/.env`** via `dotenv.config({ path: path.resolve(__dirname, "../.env") })` (same pattern as [bots/fantasy-bball/src/index.ts](bots/fantasy-bball/src/index.ts)), then async `main`, `main().catch(...)` with `process.exit(1)`. Use `BskyClient` from `@bsky-bots/common` or a dedicated class module under `src/`.
 
 4. **Optional**: `README.md` in the bot folder for env vars and run instructions.
 

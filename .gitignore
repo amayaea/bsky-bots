@@ -6,3 +6,6 @@ node_modules/
 
 # Output directories
 dist/
+
+# Cursore
+.cursor/rules/tmp/
