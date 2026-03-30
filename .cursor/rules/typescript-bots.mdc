@@ -1,0 +1,14 @@
+---
+description: TypeScript conventions for bots and common package
+globs:
+  - bots/**/*.ts
+  - common/**/*.ts
+alwaysApply: false
+---
+
+# TypeScript in this repo
+
+- Bots use `tsc` → `dist/`; run via `yarn workspace <name> start` or root `start:*` scripts after build.
+- Use the workspace dependency `@bsky-bots/common` instead of duplicating shared ATProto or helper logic.
+- Follow existing ESLint and Prettier setup (root `eslint.config` / `lint-staged`); fix lint on touched files.
+- Keep Node/types aligned with each package’s `devDependencies` (`@types/node`, `typescript`).

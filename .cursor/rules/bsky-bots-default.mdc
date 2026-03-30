@@ -1,0 +1,26 @@
+---
+description: Default project context and workflow for bsky-bots
+alwaysApply: true
+---
+
+# bsky-bots
+
+Monorepo of Bluesky bots. Yarn 4 Berry with workspaces: `common`, `bots/*`.
+
+## Setup and tooling
+
+- Install: `yarn` (see root [README.md](README.md) for `yarn husky init` on first clone).
+- Build all packages: `yarn build`.
+- Lint / format: `yarn lint`, `yarn prettier`.
+- Run bots: `yarn start:alive`, `yarn start:sotd`.
+
+## Structure
+
+- Shared code lives in `common` and is consumed as `@bsky-bots/common` from bot packages.
+- Each bot is a workspace under `bots/<name>` with its own `package.json`, `tsc` build, and `dist/` output.
+
+## Agent expectations
+
+- Prefer small, focused diffs; match naming and patterns in the bot or module you touch.
+- Do not commit secrets or `.env` contents; use env vars / dotenv as existing bots do.
+- Root scripts cover Docker (`docker:*`) and deploy (`gcloud:*`); follow existing scripts when changing deployment.
