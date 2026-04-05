@@ -1,0 +1,93 @@
+---
+alwaysApply: false
+---
+
+Ok let's use the new bot rule and we're going to create a new bot. i want this ball to be called fantasy-bball. This bot will run everyday. It will use the data I paste below to determine it's data sources. This outlined npm packages that can be used to pull fantasy baseball data . You should rely only on
+
+npm i mlb-stats-api
+
+if possible
+
+Here's a focused breakdown of the best **npm packages** for your use case:
+
+---
+
+## Best npm Packages for MLB Data
+
+### 1. `mlb-stats-api` ⭐ (Best Option)
+
+A Node.js library for consuming MLB's official Stats API, currently at version 2.0.0.
+
+```bash
+npm i mlb-stats-api
+```
+
+It includes comprehensive TypeScript definitions, and you can import types like `TeamsResponse`, `GameFeedResponse`, `ScheduleResponse`, `Team`, `Game`, and `Player` from `mlb-stats-api/types`.
+
+**What you can get:**
+
+- Schedule with probable pitchers (via `hydrate=probablePitcher`)
+- Player stats (season, career, game-by-game)
+- Live game feeds & box scores
+
+**Example — Probable Starters:**
+
+```js
+import { MlbStatsApi } from "mlb-stats-api";
+
+const api = new MlbStatsApi();
+
+// Get today's schedule with probable pitchers
+const schedule = await api.getSchedule({
+  sportId: 1,
+  date: "2026-03-29",
+  hydrate: "probablePitcher(note),team",
+});
+
+const games = schedule.dates[0].games;
+games.forEach((game) => {
+  console.log(`${game.teams.away.team.name} @ ${game.teams.home.team.name}`);
+  console.log("Away SP:", game.teams.away.probablePitcher?.fullName);
+  console.log("Home SP:", game.teams.home.probablePitcher?.fullName);
+});
+```
+
+---
+
+### 2. `node-mlb-api`
+
+A simpler Node.js wrapper that exposes game schedules, live game feeds, box scores, linescores, and standings. All functions return a promise with the JSON response. Accepts an optional date argument (MM/DD/YYYY) for schedule calls, and a `singleTeamId` for filtering by team.
+
+```bash
+npm i node-mlb-api
+```
+
+Lighter and simpler, but less maintained and fewer features than `mlb-stats-api`.
+
+---
+
+### ⚠️ Fantasy Projections: No npm Package Exists
+
+There's no npm package that provides fantasy scoring projections natively — that data comes from third-party sites. Your best approaches:
+
+| Source           | Strategy                                                                         |
+| ---------------- | -------------------------------------------------------------------------------- |
+| **SportsDataIO** | Paid REST API — call it directly with `fetch`/`axios`, no npm wrapper needed     |
+| **FantasyPros**  | No API; scrape `fantasypros.com/mlb/projections/sp.php` with `cheerio` + `axios` |
+| **FanGraphs**    | Export CSVs from their projections pages and parse with `papaparse`              |
+
+---
+
+### Recommended Combo Stack
+
+```bash
+npm i mlb-stats-api axios cheerio
+```
+
+- **`mlb-stats-api`** → probable pitchers, real stats, schedules
+- **`axios`** → call SportsDataIO or fetch projection pages
+- **`cheerio`** → parse FantasyPros HTML tables for projections
+
+Ok so what this bot needs to do is it will run on a daily schedule. Everyday, it will retrieve the probable starting pitchers for the next day. And it will retrieive each pitchers projected fantasy points. It will then make a bsky post ranking the pitchers from best to worst based on their fantasy projection.
+
+Alos, on Sundays, the bot should run an extra workflow. We need to determine which pitchers are projected to start two different games both in the upcoming week. It should create a separate post where it again shows the two start pitcher rankings for the week. It should post what day the two matchups are projected for, and then it should post a sum of the the projections for both of those games
