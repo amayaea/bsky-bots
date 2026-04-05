@@ -16,7 +16,7 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn build
+RUN yarn workspace sotd build
 
 WORKDIR /app/${WORKSPACE}
 
