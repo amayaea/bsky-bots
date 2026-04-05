@@ -141,6 +141,57 @@ export class SportsDataIoProjections {
     );
     return 0;
   }
+
+  /**
+   * Find the pitcher with the highest projection for a given team and date.
+   * Useful as a fallback when MLB probables are missing.
+   */
+  async getProjectedStarterForTeam(
+    teamAbbr: string,
+    ymd: string,
+  ): Promise<{ name: string; mlbId: number | null } | null> {
+    const rows = await this.loadDate(ymd);
+    const dayRows = rows.filter((r) => rowDayYmd(r) === ymd);
+    const team = teamAbbr.toUpperCase();
+    const teamPitchers = dayRows.filter(
+      (r) => isProbablyPitcher(r) && (r.Team ?? "").toUpperCase() === team,
+    );
+
+    if (teamPitchers.length === 0) {
+      return null;
+    }
+
+    // Sort by projection descending
+    const sorted = teamPitchers.sort(
+      (a, b) => scoreFromRow(b, this.fantasyField) - scoreFromRow(a, this.fantasyField),
+    );
+
+    const best = sorted[0];
+    const score = scoreFromRow(best, this.fantasyField);
+
+    // If the top projection is very low (e.g. 0), they might not be a starter.
+    if (score <= 5) {
+      return null;
+    }
+
+    // Try to find the MLB ID
+    const sportsDataId = best.PlayerID;
+    let mlbId: number | null = null;
+    if (sportsDataId) {
+      // Invert the map to find MLB ID from SportsData ID
+      for (const [mId, sId] of this.mlbToSportsDataId.entries()) {
+        if (sId === sportsDataId) {
+          mlbId = mId;
+          break;
+        }
+      }
+    }
+
+    return {
+      name: best.Name ?? "Unknown",
+      mlbId,
+    };
+  }
 }
 
 function parsePlayerMap(raw: string | undefined): Map<number, number> {

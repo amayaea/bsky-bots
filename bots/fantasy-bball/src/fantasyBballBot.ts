@@ -1,6 +1,11 @@
 import MLBStatsAPI from "mlb-stats-api";
 import { BskyClient } from "@bsky-bots/common";
-import { getMondayThroughSundayAfterThisSundayEt, getTomorrowYmdEt, isSundayEt } from "./dateUtils";
+import {
+  getMondayThroughSundayAfterThisSundayEt,
+  getShortDayOfWeekEt,
+  getTomorrowYmdEt,
+  isSundayEt,
+} from "./dateUtils";
 import { postThread } from "./formatPosts";
 import {
   findTwoStartPitchers,
@@ -10,7 +15,7 @@ import {
 import { SportsDataIoProjections } from "./projections/sportsDataIo";
 
 function appearanceLine(a: StarterAppearance): string {
-  return `${a.gameDate} ${a.matchupLabel}`;
+  return `${getShortDayOfWeekEt(a.gameDate)} ${a.matchupLabel}`;
 }
 
 export class FantasyBballBot {
@@ -40,7 +45,7 @@ export class FantasyBballBot {
   }
 
   private async postDailyRankings(tomorrowYmd: string): Promise<void> {
-    const starters = await getProbableStartersForDate(this.mlb, tomorrowYmd);
+    const starters = await getProbableStartersForDate(this.mlb, tomorrowYmd, this.projections);
     if (starters.length === 0) {
       console.log(`No probable starters for ${tomorrowYmd}; skipping daily post.`);
       return;
@@ -70,7 +75,7 @@ export class FantasyBballBot {
     const week = getMondayThroughSundayAfterThisSundayEt();
     const appearances: StarterAppearance[] = [];
     for (const d of week) {
-      appearances.push(...(await getProbableStartersForDate(this.mlb, d)));
+      appearances.push(...(await getProbableStartersForDate(this.mlb, d, this.projections)));
     }
 
     const twoMap = findTwoStartPitchers(appearances);
@@ -107,7 +112,7 @@ export class FantasyBballBot {
     rows.sort((a, b) => b.total - a.total);
 
     const lines = [
-      `Two-start SPs Mon–Sun ${week[0]}–${week[6]} ET (${this.fantasyLabel()} sum)`,
+      `Two-start SPs: ${week[0]} to ${week[6]} (${this.fantasyLabel()} sum)`,
       "",
       ...rows.map(
         (r, i) =>
