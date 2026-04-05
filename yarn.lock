@@ -63,14 +63,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bsky-bots/common@workspace:*, @bsky-bots/common@workspace:common":
+"@bsky-bots/common@npm:1.0.0, @bsky-bots/common@workspace:*, @bsky-bots/common@workspace:common":
   version: 0.0.0-use.local
   resolution: "@bsky-bots/common@workspace:common"
   dependencies:
     "@atproto/api": "npm:^0.13.18"
+    "@types/node": "npm:^22.9.3"
     dotenv: "npm:^16.4.5"
     process: "npm:^0.11.10"
     ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.2"
   languageName: unknown
   linkType: soft
 
@@ -306,6 +308,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/a30a75d503da795ddbd5f8851014f3e91925c2a63fa3f14128d54c998f25d682dfba96dc9589c73cf478b87a16d88beb790b11697bb8cd5bee913079237a58f2
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^22.9.3":
+  version: 22.9.3
+  resolution: "@types/node@npm:22.9.3"
+  dependencies:
+    undici-types: "npm:~6.19.8"
+  checksum: 10c0/954ec72bf29436ea62425a9563914a9c1e93f97b18194acd51d74d13998a701977547ed2985ed3a0e97211b785436d28377116e5f613bfcf3182d9bd81d784dc
   languageName: node
   linkType: hard
 
@@ -570,8 +581,11 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "bsky-bots@workspace:."
   dependencies:
+    "@atproto/api": "npm:^0.13.18"
     "@eslint/js": "npm:^9.18.0"
-    "@types/node": "npm:^22.10.10"
+    "@spotify/web-api-ts-sdk": "npm:^1.2.0"
+    "@types/node": "npm:^22.9.3"
+    dotenv: "npm:^16.4.5"
     eslint: "npm:^9.18.0"
     eslint-config-prettier: "npm:^9.1.0"
     eslint-plugin-unused-imports: "npm:^4.3.0"
@@ -579,8 +593,11 @@ __metadata:
     husky: "npm:^9.1.7"
     lint-staged: "npm:^15.3.0"
     prettier: "npm:3.4.2"
-    typescript: "npm:^5.7.3"
+    process: "npm:^0.11.10"
+    ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.2"
     typescript-eslint: "npm:^8.19.1"
+    wikipedia: "npm:^2.1.2"
   languageName: unknown
   linkType: soft
 
@@ -935,10 +952,12 @@ __metadata:
   resolution: "fantasy-bball@workspace:bots/fantasy-bball"
   dependencies:
     "@bsky-bots/common": "workspace:*"
+    "@types/node": "npm:^22.10.10"
     dotenv: "npm:^16.4.7"
     fantasydata-node-client: "npm:^1.8.2"
     mlb-stats-api: "npm:^2.0.0"
     ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.3"
   languageName: unknown
   linkType: soft
 
@@ -1172,10 +1191,12 @@ __metadata:
   resolution: "is-alive@workspace:bots/is-alive"
   dependencies:
     "@atproto/api": "npm:^0.13.18"
-    "@bsky-bots/common": "workspace:*"
+    "@bsky-bots/common": "npm:1.0.0"
+    "@types/node": "npm:^22.9.3"
     dotenv: "npm:^16.4.5"
     process: "npm:^0.11.10"
     ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.2"
     wikipedia: "npm:^2.4.2"
   languageName: unknown
   linkType: soft
@@ -1715,8 +1736,10 @@ __metadata:
   dependencies:
     "@bsky-bots/common": "workspace:*"
     "@spotify/web-api-ts-sdk": "npm:^1.2.0"
+    "@types/node": "npm:^22.10.10"
     dotenv: "npm:^16.4.7"
     ts-node: "npm:^10.9.2"
+    typescript: "npm:^5.7.3"
   languageName: unknown
   linkType: soft
 
@@ -1858,6 +1881,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^5.7.2":
+  version: 5.7.2
+  resolution: "typescript@npm:5.7.2"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/a873118b5201b2ef332127ef5c63fb9d9c155e6fdbe211cbd9d8e65877283797cca76546bad742eea36ed7efbe3424a30376818f79c7318512064e8625d61622
+  languageName: node
+  linkType: hard
+
 "typescript@npm:^5.7.3":
   version: 5.9.3
   resolution: "typescript@npm:5.9.3"
@@ -1865,6 +1898,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/6bd7552ce39f97e711db5aa048f6f9995b53f1c52f7d8667c1abdc1700c68a76a308f579cd309ce6b53646deb4e9a1be7c813a93baaf0a28ccd536a30270e1c5
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@npm%3A^5.7.2#optional!builtin<compat/typescript>":
+  version: 5.7.2
+  resolution: "typescript@patch:typescript@npm%3A5.7.2#optional!builtin<compat/typescript>::version=5.7.2&hash=5786d5"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 10c0/f3b8082c9d1d1629a215245c9087df56cb784f9fb6f27b5d55577a20e68afe2a889c040aacff6d27e35be165ecf9dca66e694c42eb9a50b3b2c451b36b5675cb
   languageName: node
   linkType: hard
 
@@ -1884,6 +1927,13 @@ __metadata:
   dependencies:
     multiformats: "npm:^9.4.2"
   checksum: 10c0/19efb7d2ba20ec2550d1ca5b453c01ad62e70098e6454d0a446b12991fa5f3286f8ee979e5cec020fac6b4cbbaad4597024dcc8b2c69365af95443cce1323e34
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.19.8":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
   languageName: node
   linkType: hard
 
@@ -1918,6 +1968,16 @@ __metadata:
   bin:
     node-which: ./bin/node-which
   checksum: 10c0/66522872a768b60c2a65a57e8ad184e5372f5b6a9ca6d5f033d4b0dc98aff63995655a7503b9c0a2598936f532120e81dd8cc155e2e92ed662a2b9377cc4374f
+  languageName: node
+  linkType: hard
+
+"wikipedia@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "wikipedia@npm:2.1.2"
+  dependencies:
+    axios: "npm:^1.4.0"
+    infobox-parser: "npm:^3.6.2"
+  checksum: 10c0/6256951596f3dcf2d01820e65e2d320d32116638c8f5270e6e9493278549ce2afa5cd2c794c876bf4c2fdd5fe4bb870cfaee53fe19528cdf3b3e4edb7a6bb477
   languageName: node
   linkType: hard
 

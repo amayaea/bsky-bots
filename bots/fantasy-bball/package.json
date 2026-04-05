@@ -16,5 +16,9 @@
     "fantasydata-node-client": "^1.8.2",
     "mlb-stats-api": "^2.0.0",
     "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.10",
+    "typescript": "^5.7.3"
   }
 }
