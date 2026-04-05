@@ -16,7 +16,7 @@ RUN yarn install
 
 COPY . .
 
-RUN yarn build
+RUN yarn workspace fantasy-bball build
 
 WORKDIR /app/${WORKSPACE}
 

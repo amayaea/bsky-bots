@@ -21,17 +21,9 @@
     "gcloud:build": "./scripts/gcloud-build.sh",
     "gcloud:deploy": "./scripts/gcloud-build.sh && ./scripts/gcloud-deploy.sh"
   },
-  "dependencies": {
-    "@atproto/api": "^0.13.18",
-    "@spotify/web-api-ts-sdk": "^1.2.0",
-    "dotenv": "^16.4.5",
-    "process": "^0.11.10",
-    "ts-node": "^10.9.2",
-    "wikipedia": "^2.1.2"
-  },
   "devDependencies": {
     "@eslint/js": "^9.18.0",
-    "@types/node": "^22.9.3",
+    "@types/node": "^22.10.10",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-unused-imports": "^4.3.0",
@@ -39,7 +31,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.3.0",
     "prettier": "3.4.2",
-    "typescript": "^5.7.2",
+    "typescript": "^5.7.3",
     "typescript-eslint": "^8.19.1"
   },
   "lint-staged": {
