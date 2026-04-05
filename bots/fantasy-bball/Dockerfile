@@ -8,15 +8,16 @@ COPY .yarn .yarn
 COPY .yarnrc.yml .yarnrc.yml
 
 COPY package.json yarn.lock ./
-
 COPY common/package.json common/
-COPY ${WORKSPACE}/package.json ${WORKSPACE}/
+COPY bots/is-alive/package.json bots/is-alive/
+COPY bots/sotd/package.json bots/sotd/
+COPY bots/fantasy-bball/package.json bots/fantasy-bball/
 
 RUN yarn install
 
 COPY . .
 
-RUN yarn workspace fantasy-bball build
+RUN yarn build
 
 WORKDIR /app/${WORKSPACE}
 

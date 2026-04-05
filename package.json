@@ -7,6 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "yarn workspaces foreach --all --topological run build",
+    "build:one": "yarn workspace",
     "clean": "yarn workspaces foreach --all run clean && rm -rf node_modules/ dist/",
     "start:alive": "yarn workspace is-alive start",
     "start:sotd": "yarn workspace sotd start",

@@ -7,16 +7,18 @@ WORKDIR /app
 COPY .yarn .yarn
 COPY .yarnrc.yml .yarnrc.yml
 
+# Copy root package.json and all workspace package.jsons first for efficient caching
 COPY package.json yarn.lock ./
-
 COPY common/package.json common/
-COPY ${WORKSPACE}/package.json ${WORKSPACE}/
+COPY bots/is-alive/package.json bots/is-alive/
+COPY bots/sotd/package.json bots/sotd/
+COPY bots/fantasy-bball/package.json bots/fantasy-bball/
 
 RUN yarn install 
 
 COPY . .
 
-RUN yarn workspace sotd build
+RUN yarn build
 
 WORKDIR /app/${WORKSPACE}
 
