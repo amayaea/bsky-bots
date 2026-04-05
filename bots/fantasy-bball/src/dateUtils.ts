@@ -56,3 +56,14 @@ export function getMondayThroughSundayAfterThisSundayEt(now: Date = new Date()):
   }
   return out;
 }
+
+/** Get shortened day of week (e.g. "Mon") for a YYYY-MM-DD string in ET. */
+export function getShortDayOfWeekEt(ymd: string): string {
+  const [y, m, d] = ymd.split("-").map(Number);
+  // Date.UTC uses 0-indexed months
+  const date = new Date(Date.UTC(y, m - 1, d, 12)); // Noon UTC to stay on the same calendar day
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: ET_TIMEZONE,
+    weekday: "short",
+  }).format(date);
+}
