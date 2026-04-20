@@ -33,7 +33,7 @@ export class BskyClient {
   }
 
   public async post(rt: RichText, embed?: AppBskyEmbedExternal.Main, createdAt?: string) {
-    console.log(`Posting "${rt.text}"`);
+    console.log(`Posting ${rt.text}`);
     await rt.detectFacets(this.agent);
     await this.agent.post({
       text: rt.text,
@@ -45,7 +45,7 @@ export class BskyClient {
   }
 
   public async postText(text: string) {
-    console.log(`Posting "${text}"`);
+    console.log(`Posting:\n${text}`);
     await this.agent.post({
       text,
     });
@@ -53,7 +53,7 @@ export class BskyClient {
 
   /** Create a post and return URIs for threading (replies). */
   public async postTextWithRef(text: string): Promise<{ uri: string; cid: string }> {
-    console.log(`Posting "${text}"`);
+    console.log(`Posting:\n${text}`);
     const { uri, cid } = await this.agent.post({
       text,
     });
@@ -67,7 +67,7 @@ export class BskyClient {
     parent: { uri: string; cid: string },
     root: { uri: string; cid: string },
   ): Promise<{ uri: string; cid: string }> {
-    console.log(`Posting reply "${text}"`);
+    console.log(`Posting reply:\n${text}`);
     const { uri, cid } = await this.agent.post({
       text,
       reply: {

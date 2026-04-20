@@ -6,6 +6,7 @@ BlueSky bots created by https://bsky.app/profile/djmilli.bsky.social
 
 - Is \_\_\_\_\_ Still Alive: https://bsky.app/profile/isalive.bsky.social
 - Song of the Day: https://bsky.app/profile/songofthedaybot.bsky.social
+- MLB Fantasy Bot: https://bsky.app/profile/mlb-fantasy-bot.bsky.social
 
 ## Setup
 

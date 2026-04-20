@@ -1,5 +1,7 @@
 # fantasy-bball
 
+BlueSky: https://bsky.app/profile/mlb-fantasy-bot.bsky.social
+
 MLB bot: ranks **probable starting pitchers** for **tomorrow** (US/Eastern) using [SportsDataIO](https://sportsdata.io) game projections via the [`fantasydata-node-client`](https://www.npmjs.com/package/fantasydata-node-client) MLB v3 projections client (`PlayerGameProjectionStatsByDate`), and posts to Bluesky.
 
 On **Sundays** (Eastern), it also posts **two-start pitchers** for the week **Monday–Sunday** immediately following that Sunday, with summed projections for both starts.

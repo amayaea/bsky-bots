@@ -1,6 +1,6 @@
 import MLBStatsAPI from "mlb-stats-api";
 import type { Game, GameTeam, Player, ScheduleResponse } from "mlb-stats-api/types";
-import type { SportsDataIoProjections } from "./projections/sportsDataIo";
+import type { ProjectionSource } from "./projections";
 
 const HYDRATE = "probablePitcher(note),team";
 
@@ -24,7 +24,7 @@ function teamAbbr(team: GameTeam): string {
 async function extractFromGame(
   game: Game,
   slateDate: string,
-  projections?: SportsDataIoProjections,
+  projections?: ProjectionSource,
 ): Promise<StarterAppearance[]> {
   const away = game.teams.away as HydratedTeam;
   const home = game.teams.home as HydratedTeam;
@@ -45,7 +45,7 @@ async function extractFromGame(
         gamePk: game.gamePk,
         matchupLabel,
       });
-    } else if (projections) {
+    } else if (projections?.getProjectedStarterForTeam) {
       // Fallback: Check projections for the highest-rated pitcher on this team/day
       const projected = await projections.getProjectedStarterForTeam(abbr, slateDate);
       if (projected) {
@@ -91,7 +91,7 @@ export async function fetchScheduleGamesForDate(mlb: MLBStatsAPI, ymd: string): 
 export async function getProbableStartersForDate(
   mlb: MLBStatsAPI,
   ymd: string,
-  projections?: SportsDataIoProjections,
+  projections?: ProjectionSource,
 ): Promise<StarterAppearance[]> {
   const games = await fetchScheduleGamesForDate(mlb, ymd);
   const results = await Promise.all(games.map((g) => extractFromGame(g, ymd, projections)));

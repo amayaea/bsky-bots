@@ -1,4 +1,5 @@
 import type { StarterAppearance } from "../mlbSchedule";
+import type { ProjectionSource } from "./types";
 
 // CommonJS sub-client — avoids instantiating FantasyDataClient with keys for every sport.
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -73,20 +74,28 @@ function scoreFromRow(row: PlayerGameProjectionRow, field: FantasyScoreField): n
   return typeof v === "number" && !Number.isNaN(v) ? v : 0;
 }
 
-export class SportsDataIoProjections {
+export class SportsDataIoProjections implements ProjectionSource {
+  public readonly name: string;
   private readonly client: InstanceType<typeof MLBv3ProjectionsClient>;
   private readonly fantasyField: FantasyScoreField;
   private readonly mlbToSportsDataId: Map<number, number>;
   private readonly cache = new Map<string, PlayerGameProjectionRow[]>();
 
-  constructor(env: NodeJS.ProcessEnv = process.env) {
+  constructor(
+    env: NodeJS.ProcessEnv = process.env,
+    overrideField?: FantasyScoreField,
+    overrideName?: string,
+  ) {
     const key = env.SPORTSDATAIO_API_KEY;
     if (!key) {
       throw new Error("Missing SPORTSDATAIO_API_KEY");
     }
     this.client = new MLBv3ProjectionsClient(key);
     this.fantasyField =
-      (env.SPORTSDATAIO_FANTASY_FIELD as FantasyScoreField) ?? "FantasyPointsDraftKings";
+      overrideField ??
+      (env.SPORTSDATAIO_FANTASY_FIELD as FantasyScoreField) ??
+      "FantasyPointsDraftKings";
+    this.name = overrideName ?? "SportsDataIO";
     this.mlbToSportsDataId = parsePlayerMap(env.SPORTSDATAIO_PLAYER_MAP);
   }
 
