@@ -12,7 +12,7 @@ import {
   getProbableStartersForDate,
   type StarterAppearance,
 } from "./mlbSchedule";
-import { SportsDataIoProjections } from "./projections/sportsDataIo";
+import { SportsDataIoProjections, CompositeProjections, ProjectionSource } from "./projections";
 
 function appearanceLine(a: StarterAppearance): string {
   return `${getShortDayOfWeekEt(a.gameDate)} ${a.matchupLabel}`;
@@ -21,11 +21,18 @@ function appearanceLine(a: StarterAppearance): string {
 export class FantasyBballBot {
   private readonly mlb = new MLBStatsAPI();
   private readonly bsky: BskyClient;
-  private readonly projections: SportsDataIoProjections;
+  private readonly projections: ProjectionSource;
 
   constructor() {
     this.bsky = new BskyClient(process.env.BLUESKY_USERNAME!, process.env.BLUESKY_PASSWORD!);
-    this.projections = new SportsDataIoProjections();
+
+    const sources: ProjectionSource[] = [
+      new SportsDataIoProjections(process.env, "FantasyPointsDraftKings", "DK"),
+      new SportsDataIoProjections(process.env, "FantasyPointsFanDuel", "FD"),
+      new SportsDataIoProjections(process.env, "FantasyPointsYahoo", "Yahoo"),
+    ];
+
+    this.projections = sources.length === 1 ? sources[0] : new CompositeProjections(sources);
   }
 
   public async run(): Promise<void> {
@@ -40,8 +47,12 @@ export class FantasyBballBot {
   }
 
   private fantasyLabel(): string {
+    if (this.projections instanceof CompositeProjections) {
+      return "aggregate";
+    }
     const f = process.env.SPORTSDATAIO_FANTASY_FIELD ?? "FantasyPointsDraftKings";
-    return f.replace("FantasyPoints", "").replace(/^DraftKings$/i, "DK") || "fantasy";
+    const base = f.replace("FantasyPoints", "").replace(/^DraftKings$/i, "DK") || "fantasy";
+    return base;
   }
 
   private async postDailyRankings(tomorrowYmd: string): Promise<void> {
