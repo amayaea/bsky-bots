@@ -2,7 +2,7 @@
 
 BlueSky: https://bsky.app/profile/mlb-fantasy-bot.bsky.social
 
-MLB bot: ranks **probable starting pitchers** for **tomorrow** (US/Eastern) using [SportsDataIO](https://sportsdata.io) game projections via the [`fantasydata-node-client`](https://www.npmjs.com/package/fantasydata-node-client) MLB v3 projections client (`PlayerGameProjectionStatsByDate`), and posts to Bluesky.
+MLB bot: ranks **probable starting pitchers** for the next two days (US/Eastern) using [SportsDataIO](https://sportsdata.io) **DraftKings** game projections via the [`fantasydata-node-client`](https://www.npmjs.com/package/fantasydata-node-client) MLB v3 projections client (`PlayerGameProjectionStatsByDate`), and posts to Bluesky.
 
 On **Sundays** (Eastern), it also posts **two-start pitchers** for the week **Monday–Sunday** immediately following that Sunday, with summed projections for both starts.
 
@@ -14,14 +14,13 @@ This process runs **once per invocation** and exits. Run it daily via cron, Clou
 
 Define these in **`bots/fantasy-bball/.env`**, like the other bots. The entrypoint loads `../.env` from `dist/`, so it resolves correctly from `yarn workspace fantasy-bball start` or from this directory.
 
-| Variable                     | Required | Description                                                                                                                         |
-| ---------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| `BLUESKY_USERNAME`           | Yes      | Bluesky handle                                                                                                                      |
-| `BLUESKY_PASSWORD`           | Yes      | App password                                                                                                                        |
-| `SPORTSDATAIO_API_KEY`       | Yes      | Subscription key (sent as `Ocp-Apim-Subscription-Key` by the SDK against `api.sportsdata.io`)                                       |
-| `SPORTSDATAIO_FANTASY_FIELD` | No       | One of `FantasyPointsDraftKings`, `FantasyPointsFanDuel`, `FantasyPoints`, `FantasyPointsYahoo`, `FantasyPointsPitching`            |
-| `SPORTSDATAIO_PLAYER_MAP`    | No       | JSON map of MLB player id (number) → SportsData / SportsDataIO `PlayerID`, e.g. `{"669194":10007215}` when name/team matching fails |
-| `NODE_ENV` / `TEST_BOT_*`    | No       | Same as other bots for dev login (`common` `BskyClient`)                                                                            |
+| Variable                  | Required | Description                                                                                                                         |
+| ------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `BLUESKY_USERNAME`        | Yes      | Bluesky handle                                                                                                                      |
+| `BLUESKY_PASSWORD`        | Yes      | App password                                                                                                                        |
+| `SPORTSDATAIO_API_KEY`    | Yes      | Subscription key (sent as `Ocp-Apim-Subscription-Key` by the SDK against `api.sportsdata.io`)                                       |
+| `SPORTSDATAIO_PLAYER_MAP` | No       | JSON map of MLB player id (number) → SportsData / SportsDataIO `PlayerID`, e.g. `{"669194":10007215}` when name/team matching fails |
+| `NODE_ENV` / `TEST_BOT_*` | No       | Same as other bots for dev login (`common` `BskyClient`)                                                                            |
 
 ## Two-start week definition
 
