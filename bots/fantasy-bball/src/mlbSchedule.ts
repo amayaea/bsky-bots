@@ -16,9 +16,80 @@ export interface StarterAppearance {
   matchupLabel: string;
 }
 
+/**
+ * Maps MLB API team IDs to SportsDataIO compatible abbreviations.
+ * This is much more robust than relying on name/abbreviation strings.
+ */
+export const MLB_TEAM_ID_TO_SDIO: Record<number, string> = {
+  108: "LAA",
+  109: "ARI",
+  110: "BAL",
+  111: "BOS",
+  112: "CHC",
+  113: "CIN",
+  114: "CLE",
+  115: "COL",
+  116: "DET",
+  117: "HOU",
+  118: "KC",
+  119: "LAD",
+  120: "WAS",
+  121: "NYM",
+  133: "ATH", // Athletics
+  134: "PIT",
+  135: "SD",
+  136: "SEA",
+  137: "SF",
+  138: "STL",
+  139: "TB",
+  140: "TEX",
+  141: "TOR",
+  142: "MIN",
+  143: "PHI",
+  144: "ATL",
+  145: "CWS",
+  146: "MIA",
+  147: "NYY",
+  158: "MIL",
+};
+
 function teamAbbr(team: GameTeam): string {
   const t = team.team;
-  return (t.abbreviation ?? t.teamName ?? t.name ?? "?").slice(0, 8);
+  if (t.id && MLB_TEAM_ID_TO_SDIO[t.id]) {
+    return MLB_TEAM_ID_TO_SDIO[t.id];
+  }
+  const raw = (t.abbreviation ?? t.teamName ?? t.name ?? "?").toUpperCase();
+  return normalizeTeamAbbr(raw);
+}
+
+/**
+ * Fallback mapping for string-based abbreviations.
+ */
+export function normalizeTeamAbbr(abbr: string): string {
+  const map: Record<string, string> = {
+    AZ: "ARI",
+    CHW: "CWS",
+    KCR: "KC",
+    SDP: "SD",
+    SFG: "SF",
+    TBR: "TB",
+    WSH: "WAS",
+    WSN: "WAS",
+    OAK: "ATH",
+    ANA: "LAA",
+    FLA: "MIA",
+    "BLUE JAYS": "TOR",
+    "RED SOX": "BOS",
+    "WHITE SOX": "CWS",
+    CUBS: "CHC",
+    BRAVES: "ATL",
+  };
+  return map[abbr] ?? (abbr.length > 3 ? abbr.slice(0, 3) : abbr);
+}
+
+function parseYmd(ymd: string): Date {
+  const [y, m, d] = ymd.split("-").map(Number);
+  return new Date(y, m - 1, d, 12, 0, 0); // Noon to avoid DST issues
 }
 
 async function extractFromGame(
@@ -94,6 +165,9 @@ export async function getProbableStartersForDate(
   projections?: ProjectionSource,
 ): Promise<StarterAppearance[]> {
   const games = await fetchScheduleGamesForDate(mlb, ymd);
+  if (games.length === 0) {
+    console.log(`[mlbSchedule] No games found for ${ymd}`);
+  }
   const results = await Promise.all(games.map((g) => extractFromGame(g, ymd, projections)));
   return results.flat();
 }
@@ -118,8 +192,23 @@ export function findTwoStartPitchers(
   for (const [key, list] of byPlayer) {
     if (list.length >= 2) {
       const sorted = [...list].sort((x, y) => x.gameDate.localeCompare(y.gameDate));
-      // In the rare case of 3 starts, we just take the first two for the summary
-      two.set(key, [sorted[0], sorted[1]]);
+
+      // Ensure starts are at least 3 days apart (SP rest)
+      for (let i = 0; i < sorted.length - 1; i++) {
+        for (let j = i + 1; j < sorted.length; j++) {
+          const d1 = parseYmd(sorted[i].gameDate);
+          const d2 = parseYmd(sorted[j].gameDate);
+          const diffDays = Math.round(
+            Math.abs(d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24),
+          );
+
+          if (diffDays >= 3) {
+            two.set(key, [sorted[i], sorted[j]]);
+            break;
+          }
+        }
+        if (two.has(key)) break;
+      }
     }
   }
   return two;

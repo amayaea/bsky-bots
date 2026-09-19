@@ -1,10 +1,11 @@
 import MLBStatsAPI from "mlb-stats-api";
 import { BskyClient } from "@bsky-bots/common";
 import {
-  getMondayThroughSundayAfterThisSundayEt,
+  getUpcomingFantasyWeekEt,
+  getUpcomingDaysYmdEt,
   getShortDayOfWeekEt,
-  getTomorrowYmdEt,
   isSundayEt,
+  isMondayEt,
 } from "./dateUtils";
 import { postThread } from "./formatPosts";
 import {
@@ -38,11 +39,12 @@ export class FantasyBballBot {
   public async run(): Promise<void> {
     await this.bsky.login();
 
-    const tomorrow = getTomorrowYmdEt();
-    await this.postDailyRankings(tomorrow);
+    for (const ymd of getUpcomingDaysYmdEt(2)) {
+      await this.postDailyRankings(ymd);
+    }
 
-    if (isSundayEt()) {
-      await this.postSundayTwoStarts();
+    if (isSundayEt() || isMondayEt()) {
+      await this.postWeeklyTwoStarts();
     }
   }
 
@@ -55,10 +57,10 @@ export class FantasyBballBot {
     return base;
   }
 
-  private async postDailyRankings(tomorrowYmd: string): Promise<void> {
-    const starters = await getProbableStartersForDate(this.mlb, tomorrowYmd, this.projections);
+  private async postDailyRankings(ymd: string): Promise<void> {
+    const starters = await getProbableStartersForDate(this.mlb, ymd, this.projections);
     if (starters.length === 0) {
-      console.log(`No probable starters for ${tomorrowYmd}; skipping daily post.`);
+      console.log(`No probable starters for ${ymd}; skipping daily post.`);
       return;
     }
 
@@ -70,8 +72,9 @@ export class FantasyBballBot {
     );
     scored.sort((a, b) => b.pts - a.pts);
 
+    const day = getShortDayOfWeekEt(ymd);
     const lines = [
-      `MLB SP ranks (probables tomorrow ${tomorrowYmd} ET, ${this.fantasyLabel()} proj)`,
+      `MLB SP ranks (probables ${day} ${ymd} ET, ${this.fantasyLabel()} proj)`,
       "",
       ...scored.map(
         ({ s, pts }, i) =>
@@ -82,8 +85,8 @@ export class FantasyBballBot {
     await postThread(this.bsky, lines.join("\n"));
   }
 
-  private async postSundayTwoStarts(): Promise<void> {
-    const week = getMondayThroughSundayAfterThisSundayEt();
+  private async postWeeklyTwoStarts(): Promise<void> {
+    const week = getUpcomingFantasyWeekEt();
     const appearances: StarterAppearance[] = [];
     for (const d of week) {
       appearances.push(...(await getProbableStartersForDate(this.mlb, d, this.projections)));

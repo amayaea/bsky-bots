@@ -178,8 +178,8 @@ export class SportsDataIoProjections implements ProjectionSource {
     const best = sorted[0];
     const score = scoreFromRow(best, this.fantasyField);
 
-    // If the top projection is very low (e.g. 0), they might not be a starter.
-    if (score <= 5) {
+    // Very low threshold for 2026 data completeness
+    if (score < 1.0) {
       return null;
     }
 

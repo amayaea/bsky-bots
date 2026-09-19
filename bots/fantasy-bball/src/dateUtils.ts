@@ -22,6 +22,13 @@ export function isSundayEt(now: Date = new Date()): boolean {
   );
 }
 
+export function isMondayEt(now: Date = new Date()): boolean {
+  return (
+    new Intl.DateTimeFormat("en-US", { timeZone: ET_TIMEZONE, weekday: "short" }).format(now) ===
+    "Mon"
+  );
+}
+
 /** YYYY-MM-DD from civil calendar parts (no timezone offset; pure date math). */
 export function ymdFromParts(year: number, month: number, day: number): string {
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -36,23 +43,58 @@ export function addCalendarDaysYmd(ymd: string, deltaDays: number): string {
 
 /** Next calendar day after the current Eastern "today". */
 export function getTomorrowYmdEt(now: Date = new Date()): string {
-  const { year, month, day } = getCalendarPartsEt(now);
-  const todayYmd = ymdFromParts(year, month, day);
-  return addCalendarDaysYmd(todayYmd, 1);
+  return getUpcomingDaysYmdEt(1, now)[0];
 }
 
 /**
- * When the job runs on Sunday ET, the "upcoming fantasy week" for two-start detection is
- * Monday through Sunday immediately following that Sunday (7 days).
+ * Next `count` calendar days after the current Eastern "today" (YYYY-MM-DD).
+ * e.g. count=2 → tomorrow and the day after.
  */
-export function getMondayThroughSundayAfterThisSundayEt(now: Date = new Date()): string[] {
+export function getUpcomingDaysYmdEt(count: number, now: Date = new Date()): string[] {
   const { year, month, day } = getCalendarPartsEt(now);
   const todayYmd = ymdFromParts(year, month, day);
-  const mondayYmd = addCalendarDaysYmd(todayYmd, 1);
-  const [sy, sm, sd] = mondayYmd.split("-").map(Number);
+  const out: string[] = [];
+  for (let i = 1; i <= count; i++) {
+    out.push(addCalendarDaysYmd(todayYmd, i));
+  }
+  return out;
+}
+
+/**
+ * Returns the Monday-through-Sunday range for the fantasy week.
+ * If Sunday: Returns tomorrow (Monday) through next Sunday.
+ * If Monday: Returns today (Monday) through this Sunday.
+ */
+export function getUpcomingFantasyWeekEt(now: Date = new Date()): string[] {
+  const { year, month, day } = getCalendarPartsEt(now);
+  const todayYmd = ymdFromParts(year, month, day);
+
+  let mondayYmd: string;
+  if (isSundayEt(now)) {
+    mondayYmd = addCalendarDaysYmd(todayYmd, 1);
+  } else if (isMondayEt(now)) {
+    mondayYmd = todayYmd;
+  } else {
+    // Fallback: find the most recent Monday
+    const weekday = new Intl.DateTimeFormat("en-US", {
+      timeZone: ET_TIMEZONE,
+      weekday: "long",
+    }).format(now);
+    const daysSinceMonday: Record<string, number> = {
+      Monday: 0,
+      Tuesday: 1,
+      Wednesday: 2,
+      Thursday: 3,
+      Friday: 4,
+      Saturday: 5,
+      Sunday: 6,
+    };
+    mondayYmd = addCalendarDaysYmd(todayYmd, -daysSinceMonday[weekday]);
+  }
+
   const out: string[] = [];
   for (let i = 0; i < 7; i++) {
-    out.push(addCalendarDaysYmd(ymdFromParts(sy, sm, sd), i));
+    out.push(addCalendarDaysYmd(mondayYmd, i));
   }
   return out;
 }
